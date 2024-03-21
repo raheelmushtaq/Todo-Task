@@ -59,7 +59,7 @@ fun TodoListScreen(
             AppHeader(
                 navController = navController,
                 title = stringResource(id = R.string.app_name),
-                showSettingsIcon = true
+                showSettingsIcon = false
             )
 
         },
@@ -99,6 +99,9 @@ fun TodoListScreen(
                             },
                             onValueChange = {
                                 viewModel.onEvent(TodoListUIEvent.Search(it))
+                            },
+                            onDone = {
+                                focusManager.clearFocus()
                             }
                         )
                         if (state.todoList.size != 0) {

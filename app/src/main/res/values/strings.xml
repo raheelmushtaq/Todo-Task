@@ -48,4 +48,6 @@
     <string name="delete">Delete</string>
     <string name="completed">Completed</string>
     <string name="due_time">Due Time</string>
+    <string name="reminder_for_app_delay">Reminder for the Task Due</string>
+    <string name="completed_task">Completed Task</string>
 </resources>

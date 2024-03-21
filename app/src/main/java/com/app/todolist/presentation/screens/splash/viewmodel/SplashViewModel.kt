@@ -1,22 +1,20 @@
 package com.app.todolist.presentation.screens.splash.viewmodel
 
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.dataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.R
 import com.app.todolist.data.TodoListRepository
-import com.app.todolist.data.models.AppSettings
 import com.app.todolist.network.ApiClient
+import com.app.todolist.notification.NotificationScheduler
 import com.google.gson.JsonIOException
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -25,7 +23,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val apiClient: ApiClient, private val todoRepository: TodoListRepository
+    private val apiClient: ApiClient,
+    private val todoRepository: TodoListRepository,
+    private val notificationScheduler: NotificationScheduler
 ) : ViewModel() {
     data class SplashUIData(val isLoading: Boolean = false, val isError: Boolean = false)
 
@@ -39,11 +39,6 @@ class SplashViewModel @Inject constructor(
 
     private val _uiData = mutableStateOf(SplashUIData())
     val uiData = _uiData
-
-    init {
-        fetchTasks()
-    }
-
 
     fun fetchTasks() {
         viewModelScope.launch {
@@ -62,12 +57,15 @@ class SplashViewModel @Inject constructor(
                     val categories = listOfTasks.map { item -> item.category }
 
                     for (index in listOfTasks.indices) {
-                        listOfTasks[index] =
-                            listOfTasks[index].copy(id = index + 1)
+                        listOfTasks[index] = listOfTasks[index].copy(id = index + 1)
                     }
 
                     todoRepository.saveCategories(categories.toSet().toList())
                     todoRepository.saveTask(listOfTasks)
+
+                    for (task in listOfTasks) {
+                        notificationScheduler.scheduleNotificationWork(task)
+                    }
                     todoRepository.setDataFetched(true)
 
                 } catch (e: Exception) {
@@ -99,6 +97,10 @@ class SplashViewModel @Inject constructor(
 //            }
 
         }
+    }
+
+    suspend fun getLanguage(): String {
+        return todoRepository.getLanguage().key
     }
 
 //    suspend fun getDataStore() = todoRepository.getAppSettings()

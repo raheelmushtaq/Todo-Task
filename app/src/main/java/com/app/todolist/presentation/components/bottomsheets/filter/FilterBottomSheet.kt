@@ -47,7 +47,7 @@ fun FilterBottomSheet(
     heading: String,
     dialogState: Boolean,
     selectedTodoFilters: TodoFilters,
-    applyFilter: (TodoFilters) -> Unit?,
+    applyFilter: (TodoFilters) -> Unit,
     onDismiss: () -> Unit,
     categories: List<String> = arrayListOf()
 ) {
@@ -55,7 +55,7 @@ fun FilterBottomSheet(
 
     BottomSheetDialog(
         dialogState = dialogState,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.height(450.dp),
         heading,
         onDismiss = onDismiss
     ) {
@@ -68,14 +68,25 @@ fun FilterBottomSheet(
 fun FilterView(
     selectedTodoFilters: TodoFilters,
     categories: List<String>,
-    applyFilter: (TodoFilters) -> Unit?,
+    applyFilter: (TodoFilters) -> Unit,
 ) {
+
 
     val selectedPriority = remember { mutableStateOf(selectedTodoFilters.tasksPriority) }
 
     val selectedOrderBy = remember { mutableStateOf(selectedTodoFilters.orderBy) }
 
     val selectedCategory = remember { mutableStateOf(selectedTodoFilters.category) }
+
+    fun onApplyFilter() {
+        applyFilter.invoke(
+            TodoFilters(
+                tasksPriority = selectedPriority.value,
+                orderBy = selectedOrderBy.value,
+                category = selectedCategory.value
+            )
+        )
+    }
 
     LaunchedEffect(key1 = selectedTodoFilters) {
         selectedPriority.value = selectedTodoFilters.tasksPriority
@@ -119,6 +130,7 @@ fun FilterView(
                     selectedCategory.value = null
                     selectedOrderBy.value = null
                     selectedPriority.value = null
+                    onApplyFilter()
                 }
             )
             Spacer(modifier = Modifier.width(10.dp))
@@ -127,13 +139,7 @@ fun FilterView(
                 modifier = Modifier.weight(1f),
                 isDisabled = false,
                 onClick = {
-                    applyFilter(
-                        TodoFilters(
-                            tasksPriority = selectedPriority.value,
-                            orderBy = selectedOrderBy.value,
-                            category = selectedCategory.value
-                        )
-                    )
+                    onApplyFilter()
                 }
             )
         }
@@ -144,7 +150,11 @@ fun FilterView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PriorityView(defaultPrority: TasksPriority?, onSelect: (TasksPriority?) -> Unit) {
+fun PriorityView(
+    defaultPrority: TasksPriority?,
+    readOnly: Boolean = false,
+    onSelect: (TasksPriority?) -> Unit
+) {
     val selectedPriority = remember { mutableStateOf(defaultPrority) }
 
     val tasksPriorityArrayLists =
@@ -160,6 +170,7 @@ fun PriorityView(defaultPrority: TasksPriority?, onSelect: (TasksPriority?) -> U
             SegmentedButton(
                 shape = SegmentedButtonDefaults.itemShape(
                     index = index,
+                    baseShape = RoundedCornerShape(30),
                     count = tasksPriorityArrayLists.size,
                 ),
                 colors = SegmentedButtonDefaults.colors(
@@ -167,10 +178,12 @@ fun PriorityView(defaultPrority: TasksPriority?, onSelect: (TasksPriority?) -> U
                     inactiveContainerColor = Color.White,
                 ),
                 onClick = {
-                    if (selectedPriority.value != priority) {
-                        selectedPriority.value = priority
+                    if (!readOnly) {
+                        if (selectedPriority.value != priority) {
+                            selectedPriority.value = priority
+                        }
+                        onSelect(selectedPriority.value)
                     }
-                    onSelect(selectedPriority.value)
                 },
                 selected = selectedPriority.value == priority
             ) {
@@ -264,6 +277,7 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy?) -> Unit) {
 fun CategoriesFilterView(
     defaultValue: String?,
     categories: List<String>,
+    readOnly: Boolean = false,
     onSelect: (String?) -> Unit
 ) {
     val selectedCategory = remember { mutableStateOf(defaultValue) }
@@ -287,10 +301,12 @@ fun CategoriesFilterView(
                     .background(Color.White)
                     .border(width = 1.dp, color = Color.Black, RoundedCornerShape(10.dp))
                     .clickable {
-                        if (!selectedCategory.value.equals(category)) {
-                            selectedCategory.value = category
+                        if (!readOnly) {
+                            if (!selectedCategory.value.equals(category)) {
+                                selectedCategory.value = category
+                            }
+                            onSelect(category)
                         }
-                        onSelect(category)
                     }
                     .padding(vertical = 8.dp, horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically

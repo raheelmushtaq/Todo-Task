@@ -98,13 +98,12 @@ dependencies {
     implementation(libs.converter.gson)
 
     //datastore
-    implementation("androidx.datastore:datastore:1.0.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation(libs.androidx.datastore)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.kotlinx.serialization.json)
 
-//    //work manager
-//    implementation("androidx.work:work-runtime-ktx:2.7.1")
-//    implementation("androidx.work:work-manager:2.7.1")
+
+    implementation(libs.android.permissions)
 
 
 

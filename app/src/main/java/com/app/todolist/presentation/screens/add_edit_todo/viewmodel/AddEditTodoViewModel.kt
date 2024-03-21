@@ -9,6 +9,7 @@ import com.app.todolist.R
 import com.app.todolist.data.TodoListRepository
 import com.app.todolist.data.models.TasksPriority
 import com.app.todolist.data.models.TodoTask
+import com.app.todolist.notification.NotificationScheduler
 import com.app.todolist.presentation.screens_routes.ScreenParams.TASK_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditTodoViewModel @Inject constructor(
-    private val repository: TodoListRepository, savedStateHandle: SavedStateHandle
+    private val repository: TodoListRepository,
+    private val notificationScheduler: NotificationScheduler,
+    savedStateHandle: SavedStateHandle
+
 ) :
     ViewModel() {
 
@@ -63,6 +67,7 @@ class AddEditTodoViewModel @Inject constructor(
                                 category = task.category,
                                 categoryError = -1,
                                 isAddToReminder = task.isReminderAdded,
+                                isCompleted = task.isCompleted,
                                 date = task.date,
                                 dateError = -1,
                             )
@@ -168,19 +173,25 @@ class AddEditTodoViewModel @Inject constructor(
         viewModelScope.launch {
 
             try {
-                repository.addTask(
-                    TodoTask(
-                        id = currentTaskId,
-                        title = dataState.value.title,
-                        description = dataState.value.description,
-                        category = dataState.value.category.toString(),
-                        date = dataState.value.date,
-                        priority = dataState.value.tasksPriority?.value
-                            ?: TasksPriority.Low.value,
-                        isCompleted = false,
-                        isReminderAdded = dataState.value.isAddToReminder
-                    )
+                val id =
+                    if (currentTaskId == -1) repository.getCurrentRecordCount() + 1 else currentTaskId
+                val task = TodoTask(
+                    id = id,
+                    title = dataState.value.title,
+                    description = dataState.value.description,
+                    category = dataState.value.category.toString(),
+                    date = dataState.value.date,
+                    priority = dataState.value.tasksPriority?.value
+                        ?: TasksPriority.Low.value,
+                    isCompleted = false,
+                    isReminderAdded = dataState.value.isAddToReminder
                 )
+                repository.addTask(
+                    task = task,
+                    isUpdate = currentTaskId != -1
+                )
+                notificationScheduler.scheduleNotificationWork(task)
+
                 _eventFlow.emit(AddEditUIEvent.Success)
 
             } catch (ex: Exception) {
@@ -220,4 +231,5 @@ data class AddEditDataState(
     val isAddToReminder: Boolean = false,
     val date: String = "",
     val dateError: Int = -1,
+    val isCompleted: Boolean = false
 )

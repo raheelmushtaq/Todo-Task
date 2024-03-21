@@ -1,5 +1,7 @@
 package com.app.todolist.presentation.screens.splash
 
+import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,12 +32,13 @@ import androidx.navigation.NavController
 import com.app.todolist.R
 import com.app.todolist.presentation.screens.splash.viewmodel.SplashViewModel
 import com.app.todolist.presentation.screens_routes.ScreenRoutes
+import com.app.todolist.utils.LanguageUtils
+import com.app.todolist.utils.PermissionUtil
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SplashScreen(
-    navController: NavController,
-    viewModel: SplashViewModel = hiltViewModel()
+    navController: NavController, viewModel: SplashViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiData = viewModel.uiData.value
@@ -43,6 +46,10 @@ fun SplashScreen(
 
     LaunchedEffect(key1 = "true", block = {
 
+//        LanguageUtils.changeLanguage(context, viewModel.getLanguage())
+        runWithNotificationPermissionCheck(context) {
+            viewModel.fetchTasks()
+        }
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
                 is SplashViewModel.UIEvent.Success -> {
@@ -56,8 +63,7 @@ fun SplashScreen(
 
                 is SplashViewModel.UIEvent.Error -> {
                     Toast.makeText(
-                        context, context.getString(event.message),
-                        Toast.LENGTH_LONG
+                        context, context.getString(event.message), Toast.LENGTH_LONG
                     ).show()
                 }
             }
@@ -115,4 +121,17 @@ fun SplashScreen(
         }
     }
 
+}
+
+
+private fun runWithNotificationPermissionCheck(context: Context, onPremission: (() -> Unit)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        PermissionUtil.requestPermission(
+            context, android.Manifest.permission.POST_NOTIFICATIONS
+        ) {
+            onPremission.invoke()
+        }
+    } else {
+        onPremission.invoke()
+    }
 }

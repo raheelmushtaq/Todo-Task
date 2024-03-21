@@ -40,11 +40,11 @@ class TodoListRepository(private val dataStoreHandler: DataStoreHandler) {
         dataStoreHandler.updateTask(task)
     }
 
-    suspend fun addTask(task: TodoTask) {
-        if (task.id == -1) {
-            dataStoreHandler.addTask(task)
-        } else {
+    suspend fun addTask(task: TodoTask, isUpdate: Boolean) {
+        if (isUpdate) {
             updateTask(task)
+        } else {
+            dataStoreHandler.addTask(task)
         }
     }
 
@@ -109,7 +109,7 @@ class TodoListRepository(private val dataStoreHandler: DataStoreHandler) {
     }
 
     suspend fun getIsDataFetched(): Boolean {
-        return dataStoreHandler.getIsDataFetched()
+        return dataStoreHandler.getIsDataFetched().first()
     }
 
     suspend fun getTaskById(taskId: Int): TodoTask? {
@@ -122,6 +122,14 @@ class TodoListRepository(private val dataStoreHandler: DataStoreHandler) {
 
         }.first()
         return tasks
+    }
+
+    suspend fun getCurrentRecordCount(): Int {
+        return dataStoreHandler.getRecourdCount().first()
+    }
+
+    suspend fun getLanguage(): Languages {
+        return dataStoreHandler.getLanguage().first()
     }
 
 }

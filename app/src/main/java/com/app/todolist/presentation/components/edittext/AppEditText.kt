@@ -31,6 +31,7 @@ fun AppEditTextField(
     hint: String,
     onValueChange: (String) -> Unit,
     textError: Int = -1,
+    readOnly: Boolean = true,
     onDone: () -> Unit = {},
 ) {
     Column {
@@ -38,6 +39,8 @@ fun AppEditTextField(
             value = textFieldValue,
             label = { Text(text = hint) },
             singleLine = true,
+            readOnly = readOnly,
+            shape = RoundedCornerShape(30),
             isError = textError != -1,
             visualTransformation = VisualTransformation.None,
             modifier = Modifier
@@ -59,6 +62,7 @@ fun AppDescriptionTextField(
     hint: String,
     onValueChange: (String) -> Unit,
     textError: Int = -1,
+    readOnly: Boolean = true,
     onDone: () -> Unit = {},
 ) {
     Column {
@@ -67,7 +71,9 @@ fun AppDescriptionTextField(
             value = textFieldValue,
             label = { Text(text = hint) },
             singleLine = false,
+            readOnly = readOnly,
             isError = textError != -1,
+            shape = RoundedCornerShape(10),
             visualTransformation = VisualTransformation.None,
             modifier = Modifier
                 .fillMaxWidth()

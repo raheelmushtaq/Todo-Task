@@ -32,6 +32,10 @@ class DataStoreHandler(private val context: Context) {
         }
     }
 
+    fun getLanguage(): Flow<Languages> {
+        return context.dataStore.data.map { it.appLanguage}
+    }
+
     suspend fun saveTask(tasks: List<TodoTask>) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(todoTasks = appSettings.todoTasks.mutate { list ->
@@ -54,7 +58,7 @@ class DataStoreHandler(private val context: Context) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(
                 todoTasks = appSettings.todoTasks.mutate { list ->
-                    task.id = appSettings.recordCount + 1
+//                    task.id = appSettings.recordCount + 1
                     list.add(task)
                 },
                 recordCount = appSettings.recordCount + 1
@@ -94,11 +98,19 @@ class DataStoreHandler(private val context: Context) {
         }
     }
 
-    suspend fun getIsDataFetched(): Boolean {
+    suspend fun getIsDataFetched(): Flow<Boolean> {
         return context.dataStore.data.map {
             it.isDataFetched
-        }.first() ?: false
+        }
     }
+
+    suspend fun getRecourdCount(): Flow<Int> {
+        return context.dataStore.data.map {
+            it.recordCount
+        }
+
+    }
+
 
 
 }

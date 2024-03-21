@@ -1,5 +1,9 @@
 [versions]
 activity-compose = "1.8.2"
+androidPermissions = "2.1.8"
+datastore = "1.0.0"
+kotlinxCollectionsImmutable = "0.3.5"
+kotlinxSerializationJson = "1.5.1"
 maxkeppeler = "1.0.2"
 datastorePreferences = "1.0.0"
 androidx-hiltCompiler = "1.2.0"
@@ -29,9 +33,11 @@ appcompat = "1.6.1"
 workRuntimeKtx = "2.9.0"
 
 [libraries]
+android-permissions = { module = "io.github.nishkarsh:android-permissions", version.ref = "androidPermissions" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hiltCompiler" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
@@ -47,6 +53,8 @@ androidx-compose-ui-material3 = { group = "androidx.compose.material3", name = "
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 maxkeppeler-core = { module = "com.maxkeppeler.sheets-compose-dialogs:core", version.ref = "maxkeppeler" }
 maxkeppeler-clock = { module = "com.maxkeppeler.sheets-compose-dialogs:clock", version.ref = "maxkeppeler" }
 maxkeppeler-calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "maxkeppeler" }

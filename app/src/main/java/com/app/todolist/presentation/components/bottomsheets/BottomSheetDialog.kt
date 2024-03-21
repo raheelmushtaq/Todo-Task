@@ -41,7 +41,7 @@ fun BottomSheetDialog(
     if (dialogState) {
 
         ModalBottomSheet(
-            modifier = Modifier.height(500.dp),
+            modifier = modifier,
             onDismissRequest = { onDismiss() },
             containerColor = Color.White,
             sheetState = sheetState,
