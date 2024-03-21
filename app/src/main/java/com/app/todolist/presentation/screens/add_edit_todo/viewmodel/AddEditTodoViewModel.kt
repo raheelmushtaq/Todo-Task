@@ -1,5 +1,6 @@
 package com.app.todolist.presentation.screens.add_edit_todo.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -175,6 +176,8 @@ class AddEditTodoViewModel @Inject constructor(
             try {
                 val id =
                     if (currentTaskId == -1) repository.getCurrentRecordCount() + 1 else currentTaskId
+
+                Log.d("xxxx", "saveNote: ${id}")
                 val task = TodoTask(
                     id = id,
                     title = dataState.value.title,

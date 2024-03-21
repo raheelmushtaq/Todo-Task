@@ -85,7 +85,7 @@ fun SplashScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.mipmap.ic_launcher),
+                    painter = painterResource(id = R.drawable.app_icon),
                     contentDescription = stringResource(id = R.string.app_name),
                     modifier = Modifier
                         .width(150.dp)

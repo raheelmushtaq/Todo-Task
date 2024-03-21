@@ -46,11 +46,8 @@ class SplashViewModel @Inject constructor(
             _uiData.value = uiData.value.copy(isError = false, isLoading = true)
 
 
-//            todoRepository.getAppSettings().collect { appSettings ->
-
             var isError = false
             var errorId = -1
-//                if (!appSettings.isDataFetched) {
             if (!todoRepository.getIsDataFetched()) {
                 try {
                     val listOfTasks = apiClient.getListOfMedicinesAndCategories()
