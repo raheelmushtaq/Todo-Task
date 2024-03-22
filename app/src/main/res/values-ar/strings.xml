@@ -44,7 +44,12 @@
     <string name="low">قليل</string>
     <string name="medium">واسطة</string>
     <string name="high">عالي</string>
-    <string name="mark_as_complete">Mark Complete</string>
+    <string name="mark_as_complete">وضع علامة كاملة</string>
+    <string name="delete">يمسح</string>
+    <string name="completed">مكتمل</string>
+    <string name="due_time">Due Time</string>
+    <string name="reminder_for_app_delay">عند الوقت</string>
+    <string name="completed_task">المهمة المكتملة</string>
     <string name="selected_language">العربية</string>
 
 </resources>

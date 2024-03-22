@@ -265,7 +265,7 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy?) -> Unit) {
                 },
                 selected = selectedOrderBy.value == ordrBy
             ) {
-                MediumText(text = ordrBy.toString().replace("_", " "))
+                MediumText(text = stringResource(id = ordrBy.keyRes))
             }
         }
     }

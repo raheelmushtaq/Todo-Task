@@ -9,10 +9,10 @@ data class TodoFilters(
     val category: String? = null
 )
 
-sealed class OrderBy(val value: String) {
-    data object Date : OrderBy("date")
-    data object Title : OrderBy("title")
-    data object Completed : OrderBy("isCompleted")
+sealed class OrderBy(val value: String, @StringRes var keyRes: Int) {
+    data object Date : OrderBy("date", R.string.date)
+    data object Title : OrderBy("title", R.string.title)
+    data object Completed : OrderBy("isCompleted", R.string.completed      )
 }
 
 sealed class TasksPriority(val value: String, @StringRes val resId: Int) {

@@ -206,9 +206,8 @@ fun AddEditTodoScreen(
                             Icon(
                                 modifier = Modifier
                                     .width(20.dp)
-                                    .height(15.dp)
-                                    .rotate(90f),
-                                painter = painterResource(id = R.drawable.ic_arrow_right),
+                                    .height(15.dp),
+                                painter = painterResource(id = R.drawable.ic_arrow_down),
                                 contentDescription = null
                             )
                         }

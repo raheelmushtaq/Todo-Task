@@ -74,13 +74,13 @@ class DataStoreHandler(private val context: Context) {
             })
         }
     }
+
     suspend fun getRecourdCount(): Flow<Int> {
         return context.dataStore.data.map {
             it.recordCount
         }
 
     }
-
 
 
 }
