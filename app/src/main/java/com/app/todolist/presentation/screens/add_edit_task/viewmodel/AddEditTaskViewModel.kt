@@ -1,6 +1,5 @@
 package com.app.todolist.presentation.screens.add_edit_task.viewmodel
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,11 +7,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.R
-import com.app.todolist.datastore.model.AppSettings
-import com.app.todolist.presentation.utils.filters.TaskPriority
-import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.datastore.DataStoreHandler
+import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.notification.NotificationScheduler
+import com.app.todolist.presentation.models.Tasks
+import com.app.todolist.presentation.screens.add_edit_task.state_event.AddEditActionEvent
+import com.app.todolist.presentation.screens.add_edit_task.state_event.AddEditDataState
+import com.app.todolist.presentation.screens.add_edit_task.state_event.AddEditUIEvent
+import com.app.todolist.presentation.utils.filters.TaskPriority
 import com.app.todolist.presentation.utils.screens.ScreenParams.TASK_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -86,31 +88,31 @@ class AddEditTodoViewModel @Inject constructor(
     }
 
 
-    fun onEvent(event: AddEditEvent) {
+    fun onEvent(event: AddEditActionEvent) {
         when (event) {
-            is AddEditEvent.EnterTitle -> {
+            is AddEditActionEvent.EnterTitle -> {
                 _dataState.value = dataState.value.copy(title = event.text)
             }
 
-            is AddEditEvent.EnterDescription -> {
+            is AddEditActionEvent.EnterDescription -> {
                 _dataState.value =
                     dataState.value.copy(description = event.text)
             }
 
-            is AddEditEvent.EnterPriority -> {
+            is AddEditActionEvent.EnterPriority -> {
                 _dataState.value =
                     dataState.value.copy(taskPriority = event.taskPriority)
             }
 
-            is AddEditEvent.EnterCategory -> {
+            is AddEditActionEvent.EnterCategory -> {
                 _dataState.value = dataState.value.copy(category = event.value)
             }
 
-            is AddEditEvent.SelectDueDate -> {
+            is AddEditActionEvent.SelectDueDate -> {
                 _dataState.value = dataState.value.copy(date = event.date)
             }
 
-            is AddEditEvent.SaveNote -> {
+            is AddEditActionEvent.SaveNote -> {
                 validateNote()
             }
         }
@@ -173,26 +175,3 @@ class AddEditTodoViewModel @Inject constructor(
 
 
 }
-
-sealed class AddEditUIEvent() {
-    object Success : AddEditUIEvent()
-    data class Error(@StringRes val errorId: Int) : AddEditUIEvent()
-}
-
-sealed class AddEditEvent {
-    data class EnterTitle(val text: String) : AddEditEvent()
-    data class EnterDescription(val text: String) : AddEditEvent()
-    data class EnterPriority(val taskPriority: TaskPriority) : AddEditEvent()
-    data class EnterCategory(val value: String) : AddEditEvent()
-    data class SelectDueDate(val date: String) : AddEditEvent()
-    data object SaveNote : AddEditEvent()
-}
-
-data class AddEditDataState(
-    val title: String = "",
-    val description: String = "",
-    val taskPriority: TaskPriority? = null,
-    val category: String? = null,
-    val date: String = "",
-    val isCompleted: Boolean = false
-)

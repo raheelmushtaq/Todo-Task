@@ -43,10 +43,9 @@ import com.app.todolist.presentation.components.button.AppButton
 import com.app.todolist.presentation.components.edittext.AppDescriptionTextField
 import com.app.todolist.presentation.components.edittext.AppEditTextField
 import com.app.todolist.presentation.components.textfields.MediumText
-import com.app.todolist.presentation.components.textfields.SmallText
-import com.app.todolist.presentation.screens.add_edit_task.viewmodel.AddEditEvent
+import com.app.todolist.presentation.screens.add_edit_task.state_event.AddEditActionEvent
+import com.app.todolist.presentation.screens.add_edit_task.state_event.AddEditUIEvent
 import com.app.todolist.presentation.screens.add_edit_task.viewmodel.AddEditTodoViewModel
-import com.app.todolist.presentation.screens.add_edit_task.viewmodel.AddEditUIEvent
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -100,7 +99,7 @@ fun AddEditTodoScreen(
         disabledTimeline = CalendarTimeline.PAST,
     ), selection = CalendarSelection.Date { date ->
         viewModel.onEvent(
-            AddEditEvent.SelectDueDate(
+            AddEditActionEvent.SelectDueDate(
                 date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString()
             )
         )
@@ -136,7 +135,7 @@ fun AddEditTodoScreen(
                     AppEditTextField(textFieldValue = state.title,
                         hint = stringResource(id = R.string.title),
                         readOnly = state.isCompleted,
-                        onValueChange = { viewModel.onEvent(AddEditEvent.EnterTitle(it)) },
+                        onValueChange = { viewModel.onEvent(AddEditActionEvent.EnterTitle(it)) },
                         onDone = { focusManager.clearFocus() })
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -144,7 +143,7 @@ fun AddEditTodoScreen(
                     AppDescriptionTextField(textFieldValue = state.description,
                         hint = stringResource(id = R.string.description),
                         readOnly = state.isCompleted,
-                        onValueChange = { viewModel.onEvent(AddEditEvent.EnterDescription(it)) },
+                        onValueChange = { viewModel.onEvent(AddEditActionEvent.EnterDescription(it)) },
                         onDone = { focusManager.clearFocus() })
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -153,7 +152,7 @@ fun AddEditTodoScreen(
                         defaultPriority = state.taskPriority, showOnlySelected = state.isCompleted,
                     ) {
                         it?.let {
-                            viewModel.onEvent(AddEditEvent.EnterPriority(it))
+                            viewModel.onEvent(AddEditActionEvent.EnterPriority(it))
                         }
 
                     }
@@ -164,7 +163,7 @@ fun AddEditTodoScreen(
                         readOnly = state.isCompleted
                     ) {
                         it?.let {
-                            viewModel.onEvent(AddEditEvent.EnterCategory(it ?: ""))
+                            viewModel.onEvent(AddEditActionEvent.EnterCategory(it ?: ""))
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -222,7 +221,7 @@ fun AddEditTodoScreen(
                             }
                             AppButton(
                                 onClick = {
-                                    viewModel.onEvent(AddEditEvent.SaveNote)
+                                    viewModel.onEvent(AddEditActionEvent.SaveNote)
                                 },
                                 modifier = Modifier
                                     .weight(1f)

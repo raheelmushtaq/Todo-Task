@@ -35,7 +35,7 @@ import com.app.todolist.presentation.components.loader.Loader
 import com.app.todolist.presentation.components.textfields.LargeText
 import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.presentation.screens.task_list.component.TodoListItem
-import com.app.todolist.presentation.screens.task_list.viewmodel.TodoListUIEvent
+import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
 import com.app.todolist.presentation.screens.task_list.viewmodel.TodoListViewModel
 import com.app.todolist.presentation.utils.screens.ScreenParams.TASK_ID
 import com.app.todolist.presentation.utils.screens.ScreenRoutes
@@ -94,11 +94,11 @@ fun TodoListScreen(
                             hint = stringResource(id = R.string.Filter),
                             showFilterIcon = true,
                             onFilterIconPressed = {
-                                viewModel.onEvent(TodoListUIEvent.ShowFilter)
+                                viewModel.onEvent(TaskListActionEvents.ShowFilter)
 
                             },
                             onValueChange = {
-                                viewModel.onEvent(TodoListUIEvent.Search(it))
+                                viewModel.onEvent(TaskListActionEvents.Search(it))
                             },
                             onDone = {
                                 focusManager.clearFocus()
@@ -114,10 +114,10 @@ fun TodoListScreen(
                                     TodoListItem(
                                         item = item,
                                         onDelete = {
-                                            viewModel.onEvent(TodoListUIEvent.Delete(item))
+                                            viewModel.onEvent(TaskListActionEvents.Delete(item))
                                         },
                                         onMarkAsComplete = {
-                                            viewModel.onEvent(TodoListUIEvent.MarkAsComplete(item))
+                                            viewModel.onEvent(TaskListActionEvents.MarkAsComplete(item))
 
                                         },
                                         onClick = {
@@ -154,9 +154,9 @@ fun TodoListScreen(
                                 dialogState = state.showFilterDialog,
                                 selectedTaskFilters = state.taskFilters,
                                 applyFilter = {
-                                    viewModel.onEvent(TodoListUIEvent.ApplyFilter(it))
+                                    viewModel.onEvent(TaskListActionEvents.ApplyFilter(it))
                                 }, onDismiss = {
-                                    viewModel.onEvent(TodoListUIEvent.HideFilter)
+                                    viewModel.onEvent(TaskListActionEvents.HideFilter)
                                 },
                                 categories = appSettings.categories
                             )

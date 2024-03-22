@@ -10,6 +10,8 @@ import com.app.todolist.presentation.utils.filters.OrderBy
 import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.datastore.DataStoreHandler
+import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
+import com.app.todolist.presentation.screens.task_list.state_event.TaskListDataState
 import com.app.todolist.presentation.utils.filters.SortBy
 import com.app.todolist.utils.DebounceSearchUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +27,8 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
     ViewModel() {
     private val _appSettings = mutableStateOf(AppSettings())
 
-    private val _dataState = mutableStateOf(TodoUIState())
-    val dataState: State<TodoUIState> = _dataState
+    private val _dataState = mutableStateOf(TaskListDataState())
+    val dataState: State<TaskListDataState> = _dataState
 
     private val _dataStoreLiveState = mutableStateOf(AppSettings())
     val dataStoreLiveState: MutableState<AppSettings> = _dataStoreLiveState
@@ -91,34 +93,34 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
         }
     }
 
-    fun onEvent(event: TodoListUIEvent) {
+    fun onEvent(event: TaskListActionEvents) {
         when (event) {
-            is TodoListUIEvent.ApplyFilter -> {
+            is TaskListActionEvents.ApplyFilter -> {
                 getTasks(dataState.value.searchText, event.taskFilters)
             }
 
-            is TodoListUIEvent.Search -> {
+            is TaskListActionEvents.Search -> {
                 _dataState.value = dataState.value.copy(searchText = event.searchText)
                 DebounceSearchUtils.setSearchTextChange {
                     getTasks(event.searchText, dataState.value.taskFilters)
                 }
             }
 
-            is TodoListUIEvent.ShowFilter -> {
+            is TaskListActionEvents.ShowFilter -> {
                 _dataState.value = dataState.value.copy(showFilterDialog = true)
             }
 
-            is TodoListUIEvent.HideFilter -> {
+            is TaskListActionEvents.HideFilter -> {
                 _dataState.value = dataState.value.copy(showFilterDialog = false)
             }
 
-            is TodoListUIEvent.Delete -> {
+            is TaskListActionEvents.Delete -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     dataStoreHandler.deleteTasks(event.task)
                 }
             }
 
-            is TodoListUIEvent.MarkAsComplete -> {
+            is TaskListActionEvents.MarkAsComplete -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     val task = event.task.copy(isCompleted = true)
                     dataStoreHandler.updateTask(task)
@@ -127,21 +129,4 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
         }
 
     }
-}
-
-data class TodoUIState(
-    val searchText: String = "",
-    val isLoading: Boolean = false,
-    val showFilterDialog: Boolean = false,
-    val taskFilters: TaskFilters = TaskFilters(),
-)
-
-
-sealed class TodoListUIEvent {
-    data class ApplyFilter(val taskFilters: TaskFilters = TaskFilters()) : TodoListUIEvent()
-    data class Search(val searchText: String) : TodoListUIEvent()
-    data class Delete(val task: Tasks) : TodoListUIEvent()
-    data class MarkAsComplete(val task: Tasks) : TodoListUIEvent()
-    data object ShowFilter : TodoListUIEvent()
-    data object HideFilter : TodoListUIEvent()
 }
