@@ -76,7 +76,7 @@ fun AddEditTodoScreen(
             when (event) {
                 is AddEditUIEvent.Error -> {
                     Toast.makeText(
-                        context, context.getString(R.string.unable_to_save_task), Toast.LENGTH_LONG
+                        context, context.getString(event.errorId), Toast.LENGTH_LONG
                     ).show()
                 }
 
@@ -135,7 +135,6 @@ fun AddEditTodoScreen(
 
                     AppEditTextField(textFieldValue = state.title,
                         hint = stringResource(id = R.string.title),
-                        textError = state.titleError,
                         readOnly = state.isCompleted,
                         onValueChange = { viewModel.onEvent(AddEditEvent.EnterTitle(it)) },
                         onDone = { focusManager.clearFocus() })
@@ -145,7 +144,6 @@ fun AddEditTodoScreen(
                     AppDescriptionTextField(textFieldValue = state.description,
                         hint = stringResource(id = R.string.description),
                         readOnly = state.isCompleted,
-                        textError = state.descriptionError,
                         onValueChange = { viewModel.onEvent(AddEditEvent.EnterDescription(it)) },
                         onDone = { focusManager.clearFocus() })
 
@@ -159,9 +157,6 @@ fun AddEditTodoScreen(
                         }
 
                     }
-                    if (state.priorityError != -1) SmallText(
-                        text = stringResource(id = state.priorityError), isError = true
-                    )
                     Spacer(modifier = Modifier.height(10.dp))
                     CategoriesFilterView(
                         defaultValue = state.category,
@@ -172,9 +167,6 @@ fun AddEditTodoScreen(
                             viewModel.onEvent(AddEditEvent.EnterCategory(it ?: ""))
                         }
                     }
-                    if (state.categoryError != -1) SmallText(
-                        text = stringResource(id = state.categoryError), isError = true
-                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Column() {
@@ -211,9 +203,6 @@ fun AddEditTodoScreen(
                             )
                         }
                     }
-                    if (state.dateError != -1) SmallText(
-                        text = stringResource(id = state.dateError), isError = true
-                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     if (!state.isCompleted) {

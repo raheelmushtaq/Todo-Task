@@ -1,5 +1,6 @@
 package com.app.todolist.presentation.screens.add_edit_task.viewmodel
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -27,8 +28,7 @@ class AddEditTodoViewModel @Inject constructor(
     private val notificationScheduler: NotificationScheduler,
     savedStateHandle: SavedStateHandle
 
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private var _dataState = mutableStateOf<AddEditDataState>(AddEditDataState())
     val dataState: State<AddEditDataState> = _dataState
@@ -58,8 +58,7 @@ class AddEditTodoViewModel @Inject constructor(
 
     private fun getTaskById(taskId: Int) {
         viewModelScope.launch {
-            val filterTasks =
-                _appSettings.value.tasks.toList().filter { task -> task.id == taskId }
+            val filterTasks = _appSettings.value.tasks.toList().filter { task -> task.id == taskId }
             val task = if (filterTasks.isNotEmpty()) {
                 filterTasks[0]
             } else null
@@ -68,27 +67,19 @@ class AddEditTodoViewModel @Inject constructor(
 
 
                 val priority = arrayListOf(
-                    TaskPriority.Low,
-                    TaskPriority.Medium,
-                    TaskPriority.High
+                    TaskPriority.Low, TaskPriority.Medium, TaskPriority.High
                 ).filter {
                     it.value.equals(
-                        task.priority.ifEmpty { TaskPriority.Low.value },
-                        true
+                        task.priority.ifEmpty { TaskPriority.Low.value }, true
                     )
                 }[0]
                 _dataState.value = _dataState.value.copy(
                     title = task.title,
-                    titleError = -1,
                     description = task.description,
-                    descriptionError = -1,
                     taskPriority = priority,
-                    priorityError = -1,
                     category = task.category,
-                    categoryError = -1,
                     isCompleted = task.isCompleted,
                     date = task.date,
-                    dateError = -1,
                 )
             }
         }
@@ -98,25 +89,25 @@ class AddEditTodoViewModel @Inject constructor(
     fun onEvent(event: AddEditEvent) {
         when (event) {
             is AddEditEvent.EnterTitle -> {
-                _dataState.value = dataState.value.copy(title = event.text, titleError = -1)
+                _dataState.value = dataState.value.copy(title = event.text)
             }
 
             is AddEditEvent.EnterDescription -> {
                 _dataState.value =
-                    dataState.value.copy(description = event.text, descriptionError = -1)
+                    dataState.value.copy(description = event.text)
             }
 
             is AddEditEvent.EnterPriority -> {
                 _dataState.value =
-                    dataState.value.copy(taskPriority = event.taskPriority, priorityError = -1)
+                    dataState.value.copy(taskPriority = event.taskPriority)
             }
 
             is AddEditEvent.EnterCategory -> {
-                _dataState.value = dataState.value.copy(category = event.value, categoryError = -1)
+                _dataState.value = dataState.value.copy(category = event.value)
             }
 
             is AddEditEvent.SelectDueDate -> {
-                _dataState.value = dataState.value.copy(date = event.date, dateError = -1)
+                _dataState.value = dataState.value.copy(date = event.date)
             }
 
             is AddEditEvent.SaveNote -> {
@@ -126,41 +117,23 @@ class AddEditTodoViewModel @Inject constructor(
     }
 
     private fun validateNote() {
-        var isError = false
-        var titleError = -1
-        var descriptionError = -1
-        var priorityError = -1
-        var categoryEror = -1
-        var dueDateError = -1
+        var errorId = -1
         if (dataState.value.title.isEmpty()) {
-            isError = true
-            titleError = R.string.title_is_required
-        }
-        if (dataState.value.description.isEmpty()) {
-            isError = true
-            descriptionError = R.string.description_is_required
-        }
-        if (dataState.value.taskPriority == null) {
-            isError = true
-            priorityError = R.string.priority_is_required
-        }
-        if (dataState.value.category == null) {
-            isError = true
-            categoryEror = R.string.category_is_required
-        }
-        if (dataState.value.date.isEmpty()) {
-            isError = true
-            dueDateError = R.string.due_date_is_required
+            errorId = R.string.title_is_required
+        } else if (dataState.value.description.isEmpty()) {
+            errorId = R.string.description_is_required
+        } else if (dataState.value.taskPriority == null) {
+            errorId = R.string.priority_is_required
+        } else if (dataState.value.category == null) {
+            errorId = R.string.category_is_required
+        } else if (dataState.value.date.isEmpty()) {
+            errorId = R.string.due_date_is_required
         }
 
-        if (isError) {
-            _dataState.value = dataState.value.copy(
-                titleError = titleError,
-                priorityError = priorityError,
-                descriptionError = descriptionError,
-                categoryError = categoryEror,
-                dateError = dueDateError
-            )
+        if (errorId != -1) {
+            viewModelScope.launch {
+                _addEditUiEvent.emit(AddEditUIEvent.Error(errorId))
+            }
         } else {
             saveNote()
         }
@@ -179,8 +152,7 @@ class AddEditTodoViewModel @Inject constructor(
                     description = dataState.value.description,
                     category = dataState.value.category.toString(),
                     date = dataState.value.date,
-                    priority = dataState.value.taskPriority?.value
-                        ?: TaskPriority.Low.value,
+                    priority = dataState.value.taskPriority?.value ?: TaskPriority.Low.value,
                     isCompleted = false,
                 )
                 if (isEditTask) {
@@ -194,7 +166,7 @@ class AddEditTodoViewModel @Inject constructor(
 
             } catch (ex: Exception) {
                 ex.printStackTrace()
-                _addEditUiEvent.emit(AddEditUIEvent.Error)
+                _addEditUiEvent.emit(AddEditUIEvent.Error(R.string.unable_to_save_task))
             }
         }
     }
@@ -204,7 +176,7 @@ class AddEditTodoViewModel @Inject constructor(
 
 sealed class AddEditUIEvent() {
     object Success : AddEditUIEvent()
-    object Error : AddEditUIEvent()
+    data class Error(@StringRes val errorId: Int) : AddEditUIEvent()
 }
 
 sealed class AddEditEvent {
@@ -218,14 +190,9 @@ sealed class AddEditEvent {
 
 data class AddEditDataState(
     val title: String = "",
-    val titleError: Int = -1,
     val description: String = "",
-    val descriptionError: Int = -1,
     val taskPriority: TaskPriority? = null,
-    val priorityError: Int = -1,
     val category: String? = null,
-    val categoryError: Int = -1,
     val date: String = "",
-    val dateError: Int = -1,
     val isCompleted: Boolean = false
 )

@@ -29,6 +29,7 @@ import com.app.todolist.R
 import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.presentation.components.textfields.RegularText
+import com.app.todolist.presentation.components.textfields.SmallText
 
 @Composable
 fun TodoListItem(
@@ -50,14 +51,14 @@ fun TodoListItem(
             ) {
                 Row {
                     MediumText(
-                        text = item.title ?: "",
+                        text = item.title,
                         fontWeight = FontWeight.Bold,
                         maxLines = 2,
                         modifier = Modifier.weight(1f)
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                MediumText(text = item.description ?: "", maxLines = 3)
+                MediumText(text = item.description, maxLines = 3)
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(modifier = Modifier.weight(1f)) {

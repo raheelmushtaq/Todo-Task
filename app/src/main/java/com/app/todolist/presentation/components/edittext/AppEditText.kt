@@ -30,7 +30,6 @@ fun AppEditTextField(
     textFieldValue: String,
     hint: String,
     onValueChange: (String) -> Unit,
-    textError: Int = -1,
     readOnly: Boolean = true,
     onDone: () -> Unit = {},
 ) {
@@ -41,7 +40,6 @@ fun AppEditTextField(
             singleLine = true,
             readOnly = readOnly,
             shape = RoundedCornerShape(30),
-            isError = textError != -1,
             visualTransformation = VisualTransformation.None,
             modifier = Modifier
                 .fillMaxWidth()
@@ -52,7 +50,6 @@ fun AppEditTextField(
             ),
             keyboardActions = KeyboardActions(onDone = { onDone() }),
         )
-        if (textError != -1) SmallText(text = stringResource(id = textError), isError = true)
     }
 }
 
@@ -61,7 +58,6 @@ fun AppDescriptionTextField(
     textFieldValue: String,
     hint: String,
     onValueChange: (String) -> Unit,
-    textError: Int = -1,
     readOnly: Boolean = true,
     onDone: () -> Unit = {},
 ) {
@@ -72,7 +68,6 @@ fun AppDescriptionTextField(
             label = { Text(text = hint) },
             singleLine = false,
             readOnly = readOnly,
-            isError = textError != -1,
             shape = RoundedCornerShape(10),
             visualTransformation = VisualTransformation.None,
             modifier = Modifier
@@ -84,7 +79,6 @@ fun AppDescriptionTextField(
             ),
             keyboardActions = KeyboardActions(onDone = { onDone() }),
         )
-        if (textError != -1) SmallText(text = stringResource(id = textError), isError = true)
     }
 }
 
