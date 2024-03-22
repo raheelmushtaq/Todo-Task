@@ -91,19 +91,6 @@ class DataStoreHandler(private val context: Context) {
             })
         }
     }
-
-    suspend fun setDataFetched(dataFetched: Boolean) {
-        context.dataStore.updateData { appSettings ->
-            appSettings.copy(isDataFetched = dataFetched)
-        }
-    }
-
-    suspend fun getIsDataFetched(): Flow<Boolean> {
-        return context.dataStore.data.map {
-            it.isDataFetched
-        }
-    }
-
     suspend fun getRecourdCount(): Flow<Int> {
         return context.dataStore.data.map {
             it.recordCount

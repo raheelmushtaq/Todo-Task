@@ -11,5 +11,4 @@ data class TodoTask(
     val date: String = "",
     val priority: String = "",
     val isCompleted: Boolean = false,
-    val isReminderAdded: Boolean = false
 )

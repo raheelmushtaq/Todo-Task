@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AppSettings(
     val appLanguage: Languages = Languages.English,
-    val isDataFetched: Boolean = false,
     val recordCount: Int = 0,
 
     @Serializable(with = SerializerPersistentTodoTask::class)

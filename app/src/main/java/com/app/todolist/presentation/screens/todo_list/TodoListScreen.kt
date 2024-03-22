@@ -27,8 +27,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.app.todolist.R
+import com.app.todolist.datastore.DataStoreViewModel
 import com.app.todolist.presentation.components.appheader.AppHeader
 import com.app.todolist.presentation.components.bottomsheets.filter.FilterBottomSheet
 import com.app.todolist.presentation.components.edittext.SearchEditTextField
@@ -44,12 +46,12 @@ import com.app.todolist.presentation.screens_routes.ScreenRoutes
 
 @Composable
 fun TodoListScreen(
-    navController: NavController, viewModel: TodoListViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: TodoListViewModel = hiltViewModel(),
 ) {
     val state = viewModel.dataState.value
-    val showFilterDialog = viewModel.showFilterDialog.value
+    val appSettings = viewModel.dataStoreLiveState.value
 
-    val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     Scaffold(
         modifier = Modifier.pointerInput(key1 = true) {
@@ -104,13 +106,13 @@ fun TodoListScreen(
                                 focusManager.clearFocus()
                             }
                         )
-                        if (state.todoList.size != 0) {
+                        if (appSettings.todoTasks.size != 0) {
                             LazyColumn(
                                 modifier = Modifier.padding(top = 10.dp),
                                 verticalArrangement = Arrangement.spacedBy(10.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                items(state.todoList, key = { it.id }) { item ->
+                                items(appSettings.todoTasks, key = { it.id }) { item ->
                                     TodoListItem(
                                         item = item,
                                         onDelete = {
@@ -148,17 +150,17 @@ fun TodoListScreen(
                             }
                         }
 
-                        if (showFilterDialog) {
+                        if (state.showFilterDialog) {
                             FilterBottomSheet(
                                 heading = "Filter",
-                                dialogState = showFilterDialog,
+                                dialogState = state.showFilterDialog,
                                 selectedTodoFilters = state.todoFilters,
                                 applyFilter = {
                                     viewModel.onEvent(TodoListUIEvent.ApplyFilter(it))
                                 }, onDismiss = {
                                     viewModel.onEvent(TodoListUIEvent.HideFilter)
                                 },
-                                categories = state.categories
+                                categories = appSettings.categories
                             )
                         }
                     }

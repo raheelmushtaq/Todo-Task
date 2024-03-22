@@ -67,13 +67,13 @@ fun AddEditTodoScreen(
 
 
     val state = viewModel.dataState.value
-    val categories = viewModel.categories.value
+    val categories = viewModel.appSettings.value.categories
 
     val context = LocalContext.current
 
 
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        viewModel.addEditUiEvent.collectLatest { event ->
             when (event) {
                 is AddEditUIEvent.Error -> {
                     Toast.makeText(
@@ -112,17 +112,13 @@ fun AddEditTodoScreen(
         detectTapGestures(onTap = { focusManager.clearFocus() })
     }, topBar = {
         val title = if (taskId != -1) {
-            if (state.isCompleted)
-                R.string.completed_task
-            else
-                R.string.edit_todo
+            if (state.isCompleted) R.string.completed_task
+            else R.string.edit_todo
         } else {
             R.string.add_todo
         }
         AppHeader(
-            showBackButton = true,
-            navController = navController,
-            title = stringResource(id = title)
+            showBackButton = true, navController = navController, title = stringResource(id = title)
         )
     }) {
 
@@ -143,8 +139,7 @@ fun AddEditTodoScreen(
                         textError = state.titleError,
                         readOnly = state.isCompleted,
                         onValueChange = { viewModel.onEvent(AddEditEvent.EnterTitle(it)) },
-                        onDone = { focusManager.clearFocus() }
-                    )
+                        onDone = { focusManager.clearFocus() })
 
                     Spacer(modifier = Modifier.height(5.dp))
 
@@ -153,8 +148,7 @@ fun AddEditTodoScreen(
                         readOnly = state.isCompleted,
                         textError = state.descriptionError,
                         onValueChange = { viewModel.onEvent(AddEditEvent.EnterDescription(it)) },
-                        onDone = { focusManager.clearFocus() }
-                    )
+                        onDone = { focusManager.clearFocus() })
 
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -197,8 +191,7 @@ fun AddEditTodoScreen(
                                 width = 1.dp, color = Color.Black, RoundedCornerShape(10.dp)
                             )
                             .clickable {
-                                if (!state.isCompleted)
-                                    calendarState.show()
+                                if (!state.isCompleted) calendarState.show()
                             }
                             .padding(vertical = 10.dp)
                             .padding(start = 20.dp, end = 10.dp),
@@ -230,14 +223,12 @@ fun AddEditTodoScreen(
                             if (taskId != -1) {
                                 Row(modifier = Modifier.weight(1f)) {
 
-                                    AppButton(
-                                        buttonText = R.string.cancel,
+                                    AppButton(buttonText = R.string.cancel,
                                         modifier = Modifier.weight(1f),
                                         isDisabled = false,
                                         onClick = {
                                             navController.navigateUp()
-                                        }
-                                    )
+                                        })
                                     Spacer(modifier = Modifier.width(10.dp))
                                 }
                             }

@@ -1,7 +1,6 @@
 package com.app.todolist.di
 
 import android.content.Context
-import com.app.todolist.data.TodoListRepository
 import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.network.ApiClient
 import com.app.todolist.notification.NotificationScheduler
@@ -27,11 +26,6 @@ object AppModule {
     @Singleton
     fun provideNotificationScheduler(@ApplicationContext context: Context) =
         NotificationScheduler(context)
-
-    @Provides
-    @Singleton
-    fun providesTodoListRepository(dataStoreHandler: DataStoreHandler): TodoListRepository =
-        TodoListRepository(dataStoreHandler)
 
     @Singleton
     @Provides

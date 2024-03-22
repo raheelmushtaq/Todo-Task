@@ -73,13 +73,13 @@ fun TodoListItem(
                         maxLines = 2,
                         modifier = Modifier.weight(1f)
                     )
-                    if (item.isReminderAdded)
-                        Icon(
-                            imageVector = Icons.Filled.Notifications,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(20.dp)
-                        )
+//                    if (item.isReminderAdded)
+//                        Icon(
+//                            imageVector = Icons.Filled.Notifications,
+//                            contentDescription = null,
+//                            modifier = Modifier
+//                                .size(20.dp)
+//                        )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 MediumText(text = item.description ?: "", maxLines = 3)

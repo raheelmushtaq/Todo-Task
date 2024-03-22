@@ -1,15 +1,16 @@
 package com.app.todolist.presentation.screens.add_edit_todo.viewmodel
 
-import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.R
-import com.app.todolist.data.TodoListRepository
+import com.app.todolist.data.models.AppSettings
 import com.app.todolist.data.models.TasksPriority
 import com.app.todolist.data.models.TodoTask
+import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.notification.NotificationScheduler
 import com.app.todolist.presentation.screens_routes.ScreenParams.TASK_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditTodoViewModel @Inject constructor(
-    private val repository: TodoListRepository,
+    private val dataStoreHandler: DataStoreHandler,
     private val notificationScheduler: NotificationScheduler,
     savedStateHandle: SavedStateHandle
 
@@ -32,67 +33,67 @@ class AddEditTodoViewModel @Inject constructor(
     private var _dataState = mutableStateOf<AddEditDataState>(AddEditDataState())
     val dataState: State<AddEditDataState> = _dataState
 
-    private val _eventFlow = MutableSharedFlow<AddEditUIEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _addEditUiEvent = MutableSharedFlow<AddEditUIEvent>()
+    val addEditUiEvent = _addEditUiEvent.asSharedFlow()
 
-    private var _categories = mutableStateOf<List<String>>(arrayListOf())
-    val categories: State<List<String>> = _categories
+    private val _appSettings = mutableStateOf(AppSettings())
+    val appSettings: MutableState<AppSettings> = _appSettings
 
     var currentTaskId: Int = -1
 
+
     init {
-        listenToAppSettings()
+        viewModelScope.launch {
+            dataStoreHandler.getAppSettings().onEach {
+                _appSettings.value = it
+            }.launchIn(viewModelScope)
+        }
+
         savedStateHandle.get<Int>(TASK_ID)?.let { taskId ->
             if (taskId.toInt() != -1) {
-                viewModelScope.launch {
-                    repository.getTaskById(taskId).also { task ->
-                        if (task != null) {
-                            currentTaskId = task.id
-                            val priority = arrayListOf(
-                                TasksPriority.Low,
-                                TasksPriority.Medium,
-                                TasksPriority.High
-                            ).filter {
-                                it.value.equals(
-                                    task.priority.ifEmpty { TasksPriority.Low.value },
-                                    true
-                                )
-                            }[0]
-                            _dataState.value = _dataState.value.copy(
-                                title = task.title,
-                                titleError = -1,
-                                description = task.description,
-                                descriptionError = -1,
-                                tasksPriority = priority,
-                                priorityError = -1,
-                                category = task.category,
-                                categoryError = -1,
-                                isAddToReminder = task.isReminderAdded,
-                                isCompleted = task.isCompleted,
-                                date = task.date,
-                                dateError = -1,
-                            )
-                        }
-                    }
-                }
+                getTaskById(taskId)
             }
         }
     }
 
-
-    private fun listenToAppSettings() {
+    private fun getTaskById(taskId: Int) {
         viewModelScope.launch {
-            getCategories()
+            val filterTasks =
+                _appSettings.value.todoTasks.toList().filter { task -> task.id == taskId }
+            val task = if (filterTasks.isNotEmpty()) {
+                filterTasks[0]
+            } else null
+            if (task != null) {
+                currentTaskId = task.id
+
+
+                val priority = arrayListOf(
+                    TasksPriority.Low,
+                    TasksPriority.Medium,
+                    TasksPriority.High
+                ).filter {
+                    it.value.equals(
+                        task.priority.ifEmpty { TasksPriority.Low.value },
+                        true
+                    )
+                }[0]
+                _dataState.value = _dataState.value.copy(
+                    title = task.title,
+                    titleError = -1,
+                    description = task.description,
+                    descriptionError = -1,
+                    tasksPriority = priority,
+                    priorityError = -1,
+                    category = task.category,
+                    categoryError = -1,
+                    isCompleted = task.isCompleted,
+                    date = task.date,
+                    dateError = -1,
+                )
+            }
         }
     }
 
-    private fun getCategories() {
-        viewModelScope.launch {
-            repository.getCategories().onEach {
-                _categories.value = it
-            }.launchIn(viewModelScope)
-        }
-    }
 
     fun onEvent(event: AddEditEvent) {
         when (event) {
@@ -112,11 +113,6 @@ class AddEditTodoViewModel @Inject constructor(
 
             is AddEditEvent.EnterCategory -> {
                 _dataState.value = dataState.value.copy(category = event.value, categoryError = -1)
-            }
-
-            is AddEditEvent.IsAddToRemember -> {
-                _dataState.value = dataState.value.copy(isAddToReminder = event.value)
-
             }
 
             is AddEditEvent.SelectDueDate -> {
@@ -174,10 +170,9 @@ class AddEditTodoViewModel @Inject constructor(
         viewModelScope.launch {
 
             try {
-                val id =
-                    if (currentTaskId == -1) repository.getCurrentRecordCount() + 1 else currentTaskId
 
-                Log.d("xxxx", "saveNote: ${id}")
+                val isEditTask = currentTaskId != -1
+                val id = if (isEditTask) currentTaskId else appSettings.value.recordCount + 1
                 val task = TodoTask(
                     id = id,
                     title = dataState.value.title,
@@ -187,19 +182,19 @@ class AddEditTodoViewModel @Inject constructor(
                     priority = dataState.value.tasksPriority?.value
                         ?: TasksPriority.Low.value,
                     isCompleted = false,
-                    isReminderAdded = dataState.value.isAddToReminder
                 )
-                repository.addTask(
-                    task = task,
-                    isUpdate = currentTaskId != -1
-                )
+                if (isEditTask) {
+                    dataStoreHandler.updateTask(task)
+                } else {
+                    dataStoreHandler.addTask(task)
+                }
                 notificationScheduler.scheduleNotificationWork(task)
 
-                _eventFlow.emit(AddEditUIEvent.Success)
+                _addEditUiEvent.emit(AddEditUIEvent.Success)
 
             } catch (ex: Exception) {
                 ex.printStackTrace()
-                _eventFlow.emit(AddEditUIEvent.Error)
+                _addEditUiEvent.emit(AddEditUIEvent.Error)
             }
         }
     }
@@ -217,7 +212,6 @@ sealed class AddEditEvent {
     data class EnterDescription(val text: String) : AddEditEvent()
     data class EnterPriority(val tasksPriority: TasksPriority) : AddEditEvent()
     data class EnterCategory(val value: String) : AddEditEvent()
-    data class IsAddToRemember(val value: Boolean) : AddEditEvent()
     data class SelectDueDate(val date: String) : AddEditEvent()
     data object SaveNote : AddEditEvent()
 }
@@ -231,7 +225,6 @@ data class AddEditDataState(
     val priorityError: Int = -1,
     val category: String? = null,
     val categoryError: Int = -1,
-    val isAddToReminder: Boolean = false,
     val date: String = "",
     val dateError: Int = -1,
     val isCompleted: Boolean = false

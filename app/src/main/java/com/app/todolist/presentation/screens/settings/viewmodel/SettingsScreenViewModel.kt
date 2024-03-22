@@ -1,21 +1,28 @@
 package com.app.todolist.presentation.screens.settings.viewmodel
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.todolist.data.TodoListRepository
+import com.app.todolist.data.models.AppSettings
+import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.presentation.screens.settings.modal.Languages
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsScreenViewModel @Inject constructor(private val repository: TodoListRepository) :
+class SettingsScreenViewModel @Inject constructor(private val dataStoreHandler: DataStoreHandler) :
     ViewModel() {
     private val _dataState = mutableStateOf(SettingUIState())
     val dataState: State<SettingUIState> = _dataState
 
+
+    private val _appSettings = mutableStateOf(AppSettings())
+    val appSettings: MutableState<AppSettings> = _appSettings
 
     init {
         listenToAppSettings()
@@ -24,9 +31,9 @@ class SettingsScreenViewModel @Inject constructor(private val repository: TodoLi
 
     private fun listenToAppSettings() {
         viewModelScope.launch {
-            repository.getAppSettings().collect {
-                _dataState.value = dataState.value.copy(language = it.appLanguage)
-            }
+            dataStoreHandler.getAppSettings().onEach {
+                _appSettings.value = it
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -37,7 +44,7 @@ class SettingsScreenViewModel @Inject constructor(private val repository: TodoLi
                     language = event.language, false, showConfirmationDialog = false
                 )
                 viewModelScope.launch {
-                    repository.changeLanguage(language = event.language)
+                    dataStoreHandler.changeLanguage(language = event.language)
                 }
             }
 

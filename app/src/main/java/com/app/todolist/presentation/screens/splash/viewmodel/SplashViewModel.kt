@@ -1,11 +1,10 @@
 package com.app.todolist.presentation.screens.splash.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.datastore.dataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.R
-import com.app.todolist.data.TodoListRepository
+import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.network.ApiClient
 import com.app.todolist.notification.NotificationScheduler
 import com.google.gson.JsonIOException
@@ -15,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -24,13 +24,13 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val apiClient: ApiClient,
-    private val todoRepository: TodoListRepository,
+    private val dataStoreHandler: DataStoreHandler,
     private val notificationScheduler: NotificationScheduler
 ) : ViewModel() {
     data class SplashUIData(val isLoading: Boolean = false, val isError: Boolean = false)
 
     sealed class UIEvent() {
-        object Success : UIEvent()
+        data object Success : UIEvent()
         data class Error(val message: Int) : UIEvent()
     }
 
@@ -40,6 +40,12 @@ class SplashViewModel @Inject constructor(
     private val _uiData = mutableStateOf(SplashUIData())
     val uiData = _uiData
 
+    init {
+        viewModelScope.launch {
+
+        }
+    }
+
     fun fetchTasks() {
         viewModelScope.launch {
 
@@ -48,7 +54,8 @@ class SplashViewModel @Inject constructor(
 
             var isError = false
             var errorId = -1
-            if (!todoRepository.getIsDataFetched()) {
+            val settings = dataStoreHandler.getAppSettings().first()
+            if (settings.categories.size == 0) {
                 try {
                     val listOfTasks = apiClient.getListOfMedicinesAndCategories()
                     val categories = listOfTasks.map { item -> item.category }
@@ -57,13 +64,12 @@ class SplashViewModel @Inject constructor(
                         listOfTasks[index] = listOfTasks[index].copy(id = index + 1)
                     }
 
-                    todoRepository.saveCategories(categories.toSet().toList())
-                    todoRepository.saveTask(listOfTasks)
+                    dataStoreHandler.saveCategories(categories.toSet().toList())
+                    dataStoreHandler.saveTask(listOfTasks)
 
                     for (task in listOfTasks) {
                         notificationScheduler.scheduleNotificationWork(task)
                     }
-                    todoRepository.setDataFetched(true)
 
                 } catch (e: Exception) {
                     isError = true
@@ -91,15 +97,10 @@ class SplashViewModel @Inject constructor(
                 _uiEvent.emit(UIEvent.Success)
 
             }
-//            }
+
 
         }
     }
 
-    suspend fun getLanguage(): String {
-        return todoRepository.getLanguage().key
-    }
-
-//    suspend fun getDataStore() = todoRepository.getAppSettings()
 }
 
