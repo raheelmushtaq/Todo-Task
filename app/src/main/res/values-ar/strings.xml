@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Todo List</string>
+    <string name="app_name">قائمة المهام</string>
     <string name="back">خلف</string>
     <string name="save">يحفظ</string>
     <string name="update">تحديث</string>
@@ -13,11 +13,11 @@
     <string name="cancel">يلغي</string>
     <string name="apply">يتقدم</string>
     <string name="priority">أولوية</string>
-    <string name="sort_by">ترتيب حسب</string>
+    <string name="sort_by">فرز حسب</string>
     <string name="order_by">ترتيب حسب</string>
     <string name="categories">فئات</string>
-    <string name="edit_todo">تحرير ما يجب القيام به</string>
-    <string name="add_todo">أضف تودو</string>
+    <string name="edit_todo">تحرير المهمة</string>
+    <string name="add_todo">إضافة مهمة</string>
     <string name="due_date">تاريخ الاستحقاق</string>
     <string name="title_is_required">لا يمكن أن يكون العنوان فارغًا</string>
     <string name="description_is_required">لا يمكن أن يكون الوصف فارغًا</string>
@@ -51,5 +51,8 @@
     <string name="reminder_for_app_delay">عند الوقت</string>
     <string name="completed_task">المهمة المكتملة</string>
     <string name="selected_language">العربية</string>
+    <string name="ascending">تصاعدي</string>
+    <string name="descending">تنازلي</string>
+    <string name="ok">نعم</string>
 
 </resources>

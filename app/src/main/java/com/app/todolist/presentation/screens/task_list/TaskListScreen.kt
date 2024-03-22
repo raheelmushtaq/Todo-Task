@@ -152,7 +152,7 @@ fun TodoListScreen(
                             FilterBottomSheet(
                                 heading = "Filter",
                                 dialogState = state.showFilterDialog,
-                                selectedTodoFilters = state.todoFilters,
+                                selectedTaskFilters = state.taskFilters,
                                 applyFilter = {
                                     viewModel.onEvent(TodoListUIEvent.ApplyFilter(it))
                                 }, onDismiss = {

@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.utils.filters.OrderBy
-import com.app.todolist.presentation.utils.filters.TodoFilters
+import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.datastore.DataStoreHandler
+import com.app.todolist.presentation.utils.filters.SortBy
 import com.app.todolist.utils.DebounceSearchUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
@@ -35,12 +36,12 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
             dataStoreHandler.getAppSettings().onEach {
                 _appSettings.value = it
                 _dataStoreLiveState.value = it
-                getTasks(dataState.value.searchText, dataState.value.todoFilters)
+                getTasks(dataState.value.searchText, dataState.value.taskFilters)
             }.launchIn(viewModelScope)
         }
     }
 
-    private fun getTasks(searchText: String = "", todoFilters: TodoFilters = TodoFilters()) {
+    private fun getTasks(searchText: String = "", taskFilters: TaskFilters = TaskFilters()) {
         viewModelScope.launch {
             var tasks =
                 if (searchText.isEmpty()) {
@@ -51,28 +52,38 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                             .contains(searchText)
                     }
                 }
-            if (todoFilters.taskPriority != null) {
+            if (taskFilters.taskPriority != null) {
                 tasks = tasks.filter { task ->
                     task.priority.equals(
-                        todoFilters.taskPriority.value, true
+                        taskFilters.taskPriority.value, true
                     )
                 }
             }
-            if (todoFilters.category != null) {
-                tasks = tasks.filter { task -> task.category.equals(todoFilters.category, true) }
+            if (taskFilters.category != null) {
+                tasks = tasks.filter { task -> task.category.equals(taskFilters.category, true) }
             }
 
-            if (todoFilters.orderBy != null) {
-                tasks = when (todoFilters.orderBy) {
-                    is OrderBy.Title -> tasks.sortedByDescending { it.title.lowercase() }
-                    is OrderBy.Date -> tasks.sortedByDescending { it.date }
-                    is OrderBy.Completed -> tasks.sortedByDescending { it.isCompleted }
+            tasks = when (taskFilters.sortBy) {
+                is SortBy.Ascending -> {
+                    when (taskFilters.orderBy) {
+                        is OrderBy.Title -> tasks.sortedBy { it.title.lowercase() }
+                        is OrderBy.Date -> tasks.sortedBy { it.date }
+                        is OrderBy.Completed -> tasks.sortedBy { it.isCompleted }
+                    }
+                }
+
+                is SortBy.Descending -> {
+                    when (taskFilters.orderBy) {
+                        is OrderBy.Title -> tasks.sortedByDescending { it.title.lowercase() }
+                        is OrderBy.Date -> tasks.sortedByDescending { it.date }
+                        is OrderBy.Completed -> tasks.sortedByDescending { it.isCompleted }
+                    }
                 }
             }
             _dataState.value =
                 dataState.value.copy(
                     searchText = searchText,
-                    todoFilters = todoFilters,
+                    taskFilters = taskFilters,
                     showFilterDialog = false
                 )
             _dataStoreLiveState.value =
@@ -83,13 +94,13 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
     fun onEvent(event: TodoListUIEvent) {
         when (event) {
             is TodoListUIEvent.ApplyFilter -> {
-                getTasks(dataState.value.searchText, event.todoFilters)
+                getTasks(dataState.value.searchText, event.taskFilters)
             }
 
             is TodoListUIEvent.Search -> {
                 _dataState.value = dataState.value.copy(searchText = event.searchText)
                 DebounceSearchUtils.setSearchTextChange {
-                    getTasks(event.searchText, dataState.value.todoFilters)
+                    getTasks(event.searchText, dataState.value.taskFilters)
                 }
             }
 
@@ -122,12 +133,12 @@ data class TodoUIState(
     val searchText: String = "",
     val isLoading: Boolean = false,
     val showFilterDialog: Boolean = false,
-    val todoFilters: TodoFilters = TodoFilters(),
+    val taskFilters: TaskFilters = TaskFilters(),
 )
 
 
 sealed class TodoListUIEvent {
-    data class ApplyFilter(val todoFilters: TodoFilters = TodoFilters()) : TodoListUIEvent()
+    data class ApplyFilter(val taskFilters: TaskFilters = TaskFilters()) : TodoListUIEvent()
     data class Search(val searchText: String) : TodoListUIEvent()
     data class Delete(val task: Tasks) : TodoListUIEvent()
     data class MarkAsComplete(val task: Tasks) : TodoListUIEvent()

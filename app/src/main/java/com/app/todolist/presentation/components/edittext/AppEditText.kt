@@ -107,8 +107,7 @@ fun SearchEditTextField(
             )
         },
         visualTransformation = VisualTransformation.None,
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Search
@@ -134,18 +133,17 @@ fun SearchEditTextField(
 
 
                     if (showFilterIcon) {
-                        Image(
-                            modifier = Modifier
-                                .width(30.dp)
-                                .height(30.dp)
-                                .padding(1.dp)
-                                .padding(end = 10.dp)
-                                .clickable {
-                                    onFilterIconPressed()
-                                },
+                        Image(modifier = Modifier
+                            .width(30.dp)
+                            .height(30.dp)
+                            .padding(end = 5.dp)
+                            .clickable {
+                                onFilterIconPressed()
+                            }
+                            .padding(5.dp),
+
                             imageVector = ImageVector.vectorResource(R.drawable.is_filter),
-                            contentDescription = stringResource(id = R.string.filter)
-                        )
+                            contentDescription = stringResource(id = R.string.filter))
                     }
                 }
             }

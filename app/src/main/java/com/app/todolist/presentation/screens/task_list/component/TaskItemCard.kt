@@ -1,6 +1,7 @@
 package com.app.todolist.presentation.screens.task_list.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -30,6 +32,7 @@ import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.presentation.components.textfields.RegularText
 import com.app.todolist.presentation.components.textfields.SmallText
+import com.app.todolist.presentation.utils.filters.TaskPriority
 
 @Composable
 fun TodoListItem(
@@ -37,6 +40,15 @@ fun TodoListItem(
     onDelete: (item: Tasks) -> Unit,
     onMarkAsComplete: (item: Tasks) -> Unit,
 ) {
+    val priorityColor = if (item.priority.equals(
+            TaskPriority.High.value,
+            true
+        )
+    ) Color.Red else if (item.priority.equals(
+            TaskPriority.Low.value,
+            true
+        )
+    ) Color.Yellow else Color.Green
     Card(
         modifier = modifier.fillMaxWidth(),
         onClick = { onClick(item) },
@@ -55,6 +67,15 @@ fun TodoListItem(
                         fontWeight = FontWeight.Bold,
                         maxLines = 2,
                         modifier = Modifier.weight(1f)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .background(
+                                priorityColor,
+                                RoundedCornerShape(100)
+                            )
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))

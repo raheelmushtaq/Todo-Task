@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">TodoList</string>
+    <string name="app_name">Task List</string>
     <string name="en" translatable="false">English</string>
     <string name="ar" translatable="false">العربية</string>
     <string name="back">Back</string>
@@ -18,8 +18,8 @@
     <string name="sort_by">Sort By</string>
     <string name="order_by">Order By</string>
     <string name="categories">Categories</string>
-    <string name="edit_todo">Edit Todo</string>
-    <string name="add_todo">Add Todo</string>
+    <string name="edit_todo">Edit Task</string>
+    <string name="add_todo">Add Task</string>
     <string name="due_date">Due Date</string>
     <string name="title_is_required">Title cannot be empty</string>
     <string name="description_is_required">Description cannot be empty</string>
@@ -53,4 +53,8 @@
     <string name="reminder_for_app_delay">Reminder for the Task Due</string>
     <string name="completed_task">Completed Task</string>
     <string name="selected_language">English</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="ok">Ok</string>
+
 </resources>

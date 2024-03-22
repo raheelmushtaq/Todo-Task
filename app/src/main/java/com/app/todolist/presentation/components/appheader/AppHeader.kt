@@ -93,7 +93,7 @@ fun AppHeader(
                             .height(30.dp)
                             .clickable {
                                 navController.navigate(ScreenRoutes.Settings.route)
-                            },
+                            }.padding(5.dp),
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_settings),
                         contentDescription = "settings"
                     )

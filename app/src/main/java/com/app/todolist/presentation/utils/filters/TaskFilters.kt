@@ -1,8 +1,9 @@
 package com.app.todolist.presentation.utils.filters
 
-data class TodoFilters(
+data class TaskFilters(
     val taskPriority: TaskPriority? = null,
-    val orderBy: OrderBy? = null,
+    val sortBy: SortBy = SortBy.Descending,
+    val orderBy: OrderBy = OrderBy.Date,
     val category: String? = null
 )
 
