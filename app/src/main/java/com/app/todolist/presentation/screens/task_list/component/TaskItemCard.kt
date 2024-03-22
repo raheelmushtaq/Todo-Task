@@ -45,10 +45,11 @@ fun TodoListItem(
             true
         )
     ) Color.Red else if (item.priority.equals(
-            TaskPriority.Low.value,
+            TaskPriority.Medium.value,
             true
         )
     ) Color.Yellow else Color.Green
+
     Card(
         modifier = modifier.fillMaxWidth(),
         onClick = { onClick(item) },
