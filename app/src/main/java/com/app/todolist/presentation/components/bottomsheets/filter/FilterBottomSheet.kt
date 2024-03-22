@@ -38,6 +38,7 @@ import com.app.todolist.presentation.utils.filters.TaskPriority
 import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.presentation.components.bottomsheets.BottomSheetDialog
 import com.app.todolist.presentation.components.button.AppButton
+import com.app.todolist.presentation.components.category.CategoryView
 import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.presentation.utils.filters.SortBy
 
@@ -169,21 +170,11 @@ fun PriorityView(
     MediumText(text = stringResource(id = R.string.priority), fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(5.dp))
     if (showOnlySelected) {
-        Row(
-            modifier = Modifier
-                .background(Color.White)
-                .border(width = 1.dp, color = Color.Black, RoundedCornerShape(10.dp))
-                .padding(vertical = 8.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Check,
-                contentDescription = null,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            MediumText(text = stringResource(id = selectedPriority.value?.resId ?: R.string.low))
-        }
+        CategoryView(
+            text = stringResource(id = selectedPriority.value?.resId ?: R.string.low),
+            showIcon = true,
+            isClickable = false
+        )
     } else {
 
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
@@ -306,29 +297,13 @@ fun CategoriesFilterView(
     ) {
         items(categories.size) { index ->
             val category = categories[index]
-            Row(modifier = Modifier
-                .background(Color.White)
-                .border(width = 1.dp, color = Color.Black, RoundedCornerShape(10.dp))
-                .clickable {
-                    if (!readOnly) {
-                        if (!selectedCategory.value.equals(category)) {
-                            selectedCategory.value = category
-                            onSelect(category)
-                        }
-                    }
-                }
-                .padding(vertical = 8.dp, horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically) {
-                if (selectedCategory.value.equals(category)) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                }
-                MediumText(text = category)
+            CategoryView(
+                text = category,
+                isClickable = !readOnly,
+                showIcon = selectedCategory.value.equals(category)
+            ) {
+                selectedCategory.value = category
+                onSelect(category)
             }
         }
     }

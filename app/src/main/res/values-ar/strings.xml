@@ -7,7 +7,7 @@
     <string name="name">اسم</string>
     <string name="title">عنوان</string>
     <string name="description">وصف</string>
-    <string name="date">تاريخ الاستحقاق</string>
+    <string name="date">تاريخ</string>
     <string name="clear">واضح</string>
     <string name="filter">منقي</string>
     <string name="cancel">يلغي</string>

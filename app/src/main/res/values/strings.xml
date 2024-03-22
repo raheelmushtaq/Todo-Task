@@ -9,7 +9,7 @@
     <string name="name">Name</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
-    <string name="date">Due Date</string>
+    <string name="date">Date</string>
     <string name="clear">Clear</string>
     <string name="filter">Filter</string>
     <string name="cancel">Cancel</string>
