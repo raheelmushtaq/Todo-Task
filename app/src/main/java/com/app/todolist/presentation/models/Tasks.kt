@@ -1,9 +1,9 @@
-package com.app.todolist.data.models
+package com.app.todolist.presentation.models
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TodoTask(
+data class Tasks(
     var id: Int,
     val title: String = "",
     val description: String = "",

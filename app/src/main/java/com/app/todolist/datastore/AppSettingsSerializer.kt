@@ -2,7 +2,7 @@ package com.app.todolist.datastore
 
 import android.util.Log
 import androidx.datastore.core.Serializer
-import com.app.todolist.data.models.AppSettings
+import com.app.todolist.datastore.model.AppSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json

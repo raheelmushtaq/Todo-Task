@@ -1,4 +1,4 @@
-package com.app.todolist.presentation.screens.todo_list
+package com.app.todolist.presentation.screens.task_list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -30,14 +31,14 @@ import com.app.todolist.R
 import com.app.todolist.presentation.components.appheader.AppHeader
 import com.app.todolist.presentation.components.bottomsheets.filter.FilterBottomSheet
 import com.app.todolist.presentation.components.edittext.SearchEditTextField
-import com.app.todolist.presentation.components.progress.Loader
+import com.app.todolist.presentation.components.loader.Loader
 import com.app.todolist.presentation.components.textfields.LargeText
 import com.app.todolist.presentation.components.textfields.MediumText
-import com.app.todolist.presentation.screens.todo_list.component.TodoListItem
-import com.app.todolist.presentation.screens.todo_list.viewmodel.TodoListUIEvent
-import com.app.todolist.presentation.screens.todo_list.viewmodel.TodoListViewModel
-import com.app.todolist.presentation.screens_routes.ScreenParams.TASK_ID
-import com.app.todolist.presentation.screens_routes.ScreenRoutes
+import com.app.todolist.presentation.screens.task_list.component.TodoListItem
+import com.app.todolist.presentation.screens.task_list.viewmodel.TodoListUIEvent
+import com.app.todolist.presentation.screens.task_list.viewmodel.TodoListViewModel
+import com.app.todolist.presentation.utils.screens.ScreenParams.TASK_ID
+import com.app.todolist.presentation.utils.screens.ScreenRoutes
 import com.app.todolist.ui.theme.TodoListTheme
 
 @Composable
@@ -63,6 +64,7 @@ fun TodoListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
+                shape = CircleShape,
                 onClick = {
                     navController.navigate(ScreenRoutes.AddEditTaskScreen.route)
                 },
@@ -102,13 +104,13 @@ fun TodoListScreen(
                                 focusManager.clearFocus()
                             }
                         )
-                        if (appSettings.todoTasks.size != 0) {
+                        if (appSettings.tasks.size != 0) {
                             LazyColumn(
                                 modifier = Modifier.padding(top = 10.dp),
                                 verticalArrangement = Arrangement.spacedBy(10.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                items(appSettings.todoTasks, key = { it.id }) { item ->
+                                items(appSettings.tasks, key = { it.id }) { item ->
                                     TodoListItem(
                                         item = item,
                                         onDelete = {

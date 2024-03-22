@@ -1,6 +1,6 @@
 package com.app.todolist.datastore
 
-import com.app.todolist.data.models.TodoTask
+import com.app.todolist.presentation.models.Tasks
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -14,9 +14,9 @@ import kotlinx.serialization.encoding.Encoder
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = PersistentList::class)
-class SerializerPersistentTodoTask(
-    private val serializer: KSerializer<TodoTask>,
-) : KSerializer<PersistentList<TodoTask>> {
+class SerializerPersistentTask(
+    private val serializer: KSerializer<Tasks>,
+) : KSerializer<PersistentList<Tasks>> {
 
     private class PersistentListDescriptor :
         SerialDescriptor by serialDescriptor<List<String>>() {
@@ -25,11 +25,11 @@ class SerializerPersistentTodoTask(
 
     override val descriptor: SerialDescriptor = PersistentListDescriptor()
 
-    override fun serialize(encoder: Encoder, value: PersistentList<TodoTask>) {
+    override fun serialize(encoder: Encoder, value: PersistentList<Tasks>) {
         return ListSerializer(serializer).serialize(encoder, value)
     }
 
-    override fun deserialize(decoder: Decoder): PersistentList<TodoTask> {
+    override fun deserialize(decoder: Decoder): PersistentList<Tasks> {
         return ListSerializer(serializer).deserialize(decoder).toPersistentList()
     }
 

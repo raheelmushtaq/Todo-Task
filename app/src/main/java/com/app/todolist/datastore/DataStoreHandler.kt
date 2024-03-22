@@ -3,14 +3,14 @@ package com.app.todolist.datastore
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import com.app.todolist.data.models.AppSettings
-import com.app.todolist.data.models.TodoTask
+import com.app.todolist.datastore.model.AppSettings
+import com.app.todolist.presentation.models.Tasks
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<AppSettings> by dataStore(
-    fileName = "todo_datastore.json",
+    fileName = "task_datastore.json",
     serializer = AppSettingsSerializer()
 )
 
@@ -19,28 +19,28 @@ class DataStoreHandler(private val context: Context) {
 
     fun getAppSettings() = context.dataStore.data
 
-    suspend fun saveTask(tasks: List<TodoTask>) {
+    suspend fun saveTask(tasks: List<Tasks>) {
         context.dataStore.updateData { appSettings ->
-            appSettings.copy(todoTasks = appSettings.todoTasks.mutate { list ->
+            appSettings.copy(tasks = appSettings.tasks.mutate { list ->
                 list.clear();
                 list.addAll(tasks)
             }, recordCount = tasks.size)
         }
     }
 
-    suspend fun updateTask(task: TodoTask) {
+    suspend fun updateTask(task: Tasks) {
         context.dataStore.updateData { appSettings ->
-            appSettings.copy(todoTasks = appSettings.todoTasks.mutate { list ->
+            appSettings.copy(tasks = appSettings.tasks.mutate { list ->
                 val index = list.indexOfFirst { item -> item.id == task.id }
                 if (index != -1) list[index] = task
             })
         }
     }
 
-    suspend fun addTask(task: TodoTask) {
+    suspend fun addTask(task: Tasks) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(
-                todoTasks = appSettings.todoTasks.mutate { list ->
+                tasks = appSettings.tasks.mutate { list ->
 //                    task.id = appSettings.recordCount + 1
                     list.add(task)
                 },
@@ -49,9 +49,9 @@ class DataStoreHandler(private val context: Context) {
         }
     }
 
-    suspend fun deleteTasks(task: TodoTask) {
+    suspend fun deleteTasks(task: Tasks) {
         context.dataStore.updateData { appSettings ->
-            appSettings.copy(todoTasks = appSettings.todoTasks.mutate { list ->
+            appSettings.copy(tasks = appSettings.tasks.mutate { list ->
                 val index = list.indexOfFirst { item -> item.id == task.id }
                 if (index != -1)
                     list.removeAt(index)
@@ -59,8 +59,8 @@ class DataStoreHandler(private val context: Context) {
         }
     }
 
-    fun getTasks(): Flow<List<TodoTask>> =
-        context.dataStore.data.map { it.todoTasks.toList() }
+    fun getTasks(): Flow<List<Tasks>> =
+        context.dataStore.data.map { it.tasks.toList() }
 
     fun getCategories(): Flow<List<String>> =
         context.dataStore.data.map { it.categories.toList() }

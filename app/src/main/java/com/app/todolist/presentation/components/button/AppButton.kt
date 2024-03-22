@@ -8,6 +8,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,13 +19,14 @@ import com.app.todolist.R
 fun AppButton(
     modifier: Modifier = Modifier,
     buttonText: Int,
+    isSecondary: Boolean = false,
     isDisabled: Boolean = false,
     onClick: () -> Unit = {}
 ) {
     Button(
         modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black,
+            containerColor = colorResource(id = if (isSecondary) R.color.delete else R.color.accept),
             disabledContainerColor = Color.LightGray
         ),
         enabled = !isDisabled,

@@ -1,7 +1,6 @@
 package com.app.todolist
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -18,13 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.app.todolist.presentation.screens.add_edit_todo.AddEditTodoScreen
+import com.app.todolist.presentation.screens.add_edit_task.AddEditTodoScreen
 import com.app.todolist.presentation.screens.settings.SettingsScreen
 import com.app.todolist.presentation.screens.splash.SplashScreen
-import com.app.todolist.presentation.screens.todo_list.TodoListScreen
+import com.app.todolist.presentation.screens.task_list.TodoListScreen
 import com.app.todolist.ui.theme.TodoListTheme
-import com.app.todolist.presentation.screens_routes.ScreenParams.TASK_ID
-import com.app.todolist.presentation.screens_routes.ScreenRoutes
+import com.app.todolist.presentation.utils.screens.ScreenParams.TASK_ID
+import com.app.todolist.presentation.utils.screens.ScreenRoutes
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                         SplashScreen(navController = navController)
                     }
 
-                    composable(route = ScreenRoutes.TodoListScreen.route) {
+                    composable(route = ScreenRoutes.TaskLisstScreen.route) {
                         TodoListScreen(navController = navController)
                     }
                     composable(

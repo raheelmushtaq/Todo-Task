@@ -13,31 +13,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ExtraSmallText(
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = Color.Black,
-    maxLines: Int = 1
-) {
-    Text(
-        text = text,
-        color = color,
-        fontSize = 7.sp,
-        fontFamily = FontFamily.SansSerif,
-        modifier = modifier,
-        maxLines = maxLines,
-        style = TextStyle(
-            platformStyle = PlatformTextStyle(
-                includeFontPadding = false
-            ),
-        )
-    )
-}
-
-@Composable
 fun SmallText(
-    text: String,
     modifier: Modifier = Modifier,
+    text: String,
     maxLines: Int = 1,
     isError: Boolean = false
 ) {
@@ -53,7 +31,8 @@ fun SmallText(
 
 @Composable
 fun RegularText(
-    text: String, modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
+    text: String,
     fontWeight: FontWeight = FontWeight.Normal,
     color: Color = Color.Black,
     maxLines: Int = Int.MAX_VALUE
@@ -71,9 +50,9 @@ fun RegularText(
 
 @Composable
 fun MediumText(
+    modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
-    modifier: Modifier = Modifier,
     fontWeight: FontWeight = FontWeight.Normal,
     maxLines: Int = Int.MAX_VALUE
 ) {
@@ -90,8 +69,8 @@ fun MediumText(
 
 @Composable
 fun LargeText(
-    text: String,
     modifier: Modifier = Modifier,
+    text: String,
     color: Color = Color.Black,
     fontWeight: FontWeight = FontWeight.Normal,
     align: TextAlign = TextAlign.Start,

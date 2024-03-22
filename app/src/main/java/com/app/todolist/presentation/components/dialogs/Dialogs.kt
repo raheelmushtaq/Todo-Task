@@ -1,7 +1,6 @@
-package com.app.todolist.presentation.components.Dialogs
+package com.app.todolist.presentation.components.dialogs
 
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -9,7 +8,6 @@ import com.app.todolist.R
 import com.app.todolist.presentation.components.textfields.LargeText
 import com.app.todolist.presentation.components.textfields.MediumText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmationDialog(
     dialogTitle: String,
@@ -33,7 +31,7 @@ fun ConfirmationDialog(
                     onConfirmation()
                 }
             ) {
-                MediumText(stringResource(R.string.confirm))
+                MediumText(text =stringResource(R.string.confirm))
             }
         },
         dismissButton = {
@@ -42,7 +40,7 @@ fun ConfirmationDialog(
                     onDismissRequest()
                 }
             ) {
-                MediumText(stringResource(R.string.cancel))
+                MediumText(text = stringResource(R.string.cancel))
             }
         }
     )

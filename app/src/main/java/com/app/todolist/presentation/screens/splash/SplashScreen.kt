@@ -31,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.app.todolist.R
 import com.app.todolist.presentation.screens.splash.viewmodel.SplashViewModel
-import com.app.todolist.presentation.screens_routes.ScreenRoutes
+import com.app.todolist.presentation.utils.screens.ScreenRoutes
 import com.app.todolist.utils.PermissionUtil
 import kotlinx.coroutines.flow.collectLatest
 
@@ -52,7 +52,7 @@ fun SplashScreen(
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
                 is SplashViewModel.UIEvent.Success -> {
-                    navController.navigate(ScreenRoutes.TodoListScreen.route) {
+                    navController.navigate(ScreenRoutes.TaskLisstScreen.route) {
                         launchSingleTop = true
                         popUpTo(ScreenRoutes.SplashScreen.route) {
                             inclusive = true

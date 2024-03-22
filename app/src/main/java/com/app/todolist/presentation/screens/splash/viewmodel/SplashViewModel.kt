@@ -57,7 +57,7 @@ class SplashViewModel @Inject constructor(
             val settings = dataStoreHandler.getAppSettings().first()
             if (settings.categories.size == 0) {
                 try {
-                    val listOfTasks = apiClient.getListOfMedicinesAndCategories()
+                    val listOfTasks = apiClient.getTasks()
                     val categories = listOfTasks.map { item -> item.category }
 
                     for (index in listOfTasks.indices) {

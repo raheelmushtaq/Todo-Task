@@ -1,4 +1,4 @@
-package com.app.todolist.presentation.screens.add_edit_todo.viewmodel
+package com.app.todolist.presentation.screens.add_edit_task.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -7,12 +7,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.R
-import com.app.todolist.data.models.AppSettings
-import com.app.todolist.data.models.TasksPriority
-import com.app.todolist.data.models.TodoTask
+import com.app.todolist.datastore.model.AppSettings
+import com.app.todolist.presentation.utils.filters.TaskPriority
+import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.notification.NotificationScheduler
-import com.app.todolist.presentation.screens_routes.ScreenParams.TASK_ID
+import com.app.todolist.presentation.utils.screens.ScreenParams.TASK_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -59,7 +59,7 @@ class AddEditTodoViewModel @Inject constructor(
     private fun getTaskById(taskId: Int) {
         viewModelScope.launch {
             val filterTasks =
-                _appSettings.value.todoTasks.toList().filter { task -> task.id == taskId }
+                _appSettings.value.tasks.toList().filter { task -> task.id == taskId }
             val task = if (filterTasks.isNotEmpty()) {
                 filterTasks[0]
             } else null
@@ -68,12 +68,12 @@ class AddEditTodoViewModel @Inject constructor(
 
 
                 val priority = arrayListOf(
-                    TasksPriority.Low,
-                    TasksPriority.Medium,
-                    TasksPriority.High
+                    TaskPriority.Low,
+                    TaskPriority.Medium,
+                    TaskPriority.High
                 ).filter {
                     it.value.equals(
-                        task.priority.ifEmpty { TasksPriority.Low.value },
+                        task.priority.ifEmpty { TaskPriority.Low.value },
                         true
                     )
                 }[0]
@@ -82,7 +82,7 @@ class AddEditTodoViewModel @Inject constructor(
                     titleError = -1,
                     description = task.description,
                     descriptionError = -1,
-                    tasksPriority = priority,
+                    taskPriority = priority,
                     priorityError = -1,
                     category = task.category,
                     categoryError = -1,
@@ -108,7 +108,7 @@ class AddEditTodoViewModel @Inject constructor(
 
             is AddEditEvent.EnterPriority -> {
                 _dataState.value =
-                    dataState.value.copy(tasksPriority = event.tasksPriority, priorityError = -1)
+                    dataState.value.copy(taskPriority = event.taskPriority, priorityError = -1)
             }
 
             is AddEditEvent.EnterCategory -> {
@@ -140,7 +140,7 @@ class AddEditTodoViewModel @Inject constructor(
             isError = true
             descriptionError = R.string.description_is_required
         }
-        if (dataState.value.tasksPriority == null) {
+        if (dataState.value.taskPriority == null) {
             isError = true
             priorityError = R.string.priority_is_required
         }
@@ -173,14 +173,14 @@ class AddEditTodoViewModel @Inject constructor(
 
                 val isEditTask = currentTaskId != -1
                 val id = if (isEditTask) currentTaskId else appSettings.value.recordCount + 1
-                val task = TodoTask(
+                val task = Tasks(
                     id = id,
                     title = dataState.value.title,
                     description = dataState.value.description,
                     category = dataState.value.category.toString(),
                     date = dataState.value.date,
-                    priority = dataState.value.tasksPriority?.value
-                        ?: TasksPriority.Low.value,
+                    priority = dataState.value.taskPriority?.value
+                        ?: TaskPriority.Low.value,
                     isCompleted = false,
                 )
                 if (isEditTask) {
@@ -210,7 +210,7 @@ sealed class AddEditUIEvent() {
 sealed class AddEditEvent {
     data class EnterTitle(val text: String) : AddEditEvent()
     data class EnterDescription(val text: String) : AddEditEvent()
-    data class EnterPriority(val tasksPriority: TasksPriority) : AddEditEvent()
+    data class EnterPriority(val taskPriority: TaskPriority) : AddEditEvent()
     data class EnterCategory(val value: String) : AddEditEvent()
     data class SelectDueDate(val date: String) : AddEditEvent()
     data object SaveNote : AddEditEvent()
@@ -221,7 +221,7 @@ data class AddEditDataState(
     val titleError: Int = -1,
     val description: String = "",
     val descriptionError: Int = -1,
-    val tasksPriority: TasksPriority? = null,
+    val taskPriority: TaskPriority? = null,
     val priorityError: Int = -1,
     val category: String? = null,
     val categoryError: Int = -1,

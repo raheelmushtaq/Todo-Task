@@ -1,14 +1,14 @@
-package com.app.todolist.presentation.screens.todo_list.viewmodel
+package com.app.todolist.presentation.screens.task_list.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.todolist.data.models.AppSettings
-import com.app.todolist.data.models.OrderBy
-import com.app.todolist.data.models.TodoFilters
-import com.app.todolist.data.models.TodoTask
+import com.app.todolist.datastore.model.AppSettings
+import com.app.todolist.presentation.utils.filters.OrderBy
+import com.app.todolist.presentation.utils.filters.TodoFilters
+import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.utils.DebounceSearchUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,17 +44,17 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
         viewModelScope.launch {
             var tasks =
                 if (searchText.isEmpty()) {
-                    _appSettings.value.todoTasks.toList()
+                    _appSettings.value.tasks.toList()
                 } else {
-                    _appSettings.value.todoTasks.toList().filter { task ->
+                    _appSettings.value.tasks.toList().filter { task ->
                         task.title.lowercase().contains(searchText) || task.description.lowercase()
                             .contains(searchText)
                     }
                 }
-            if (todoFilters.tasksPriority != null) {
+            if (todoFilters.taskPriority != null) {
                 tasks = tasks.filter { task ->
                     task.priority.equals(
-                        todoFilters.tasksPriority.value, true
+                        todoFilters.taskPriority.value, true
                     )
                 }
             }
@@ -76,7 +76,7 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                     showFilterDialog = false
                 )
             _dataStoreLiveState.value =
-                _appSettings.value.copy(todoTasks = tasks.toPersistentList())
+                _appSettings.value.copy(tasks = tasks.toPersistentList())
         }
     }
 
@@ -129,8 +129,8 @@ data class TodoUIState(
 sealed class TodoListUIEvent {
     data class ApplyFilter(val todoFilters: TodoFilters = TodoFilters()) : TodoListUIEvent()
     data class Search(val searchText: String) : TodoListUIEvent()
-    data class Delete(val task: TodoTask) : TodoListUIEvent()
-    data class MarkAsComplete(val task: TodoTask) : TodoListUIEvent()
+    data class Delete(val task: Tasks) : TodoListUIEvent()
+    data class MarkAsComplete(val task: Tasks) : TodoListUIEvent()
     data object ShowFilter : TodoListUIEvent()
     data object HideFilter : TodoListUIEvent()
 }

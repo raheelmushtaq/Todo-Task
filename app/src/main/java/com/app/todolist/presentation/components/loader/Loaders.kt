@@ -1,4 +1,4 @@
-package com.app.todolist.presentation.components.progress
+package com.app.todolist.presentation.components.loader
 
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable

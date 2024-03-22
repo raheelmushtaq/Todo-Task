@@ -35,7 +35,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(gson: Gson?): Retrofit.Builder {
+    fun provideRetrofit(gson: Gson): Retrofit.Builder {
         return Retrofit.Builder()
             .baseUrl(ApiClient.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))

@@ -1,4 +1,4 @@
-package com.app.todolist.presentation.screens.add_edit_todo
+package com.app.todolist.presentation.screens.add_edit_task
 
 import android.icu.util.Calendar
 import android.os.Build
@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -45,9 +44,9 @@ import com.app.todolist.presentation.components.edittext.AppDescriptionTextField
 import com.app.todolist.presentation.components.edittext.AppEditTextField
 import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.presentation.components.textfields.SmallText
-import com.app.todolist.presentation.screens.add_edit_todo.viewmodel.AddEditEvent
-import com.app.todolist.presentation.screens.add_edit_todo.viewmodel.AddEditTodoViewModel
-import com.app.todolist.presentation.screens.add_edit_todo.viewmodel.AddEditUIEvent
+import com.app.todolist.presentation.screens.add_edit_task.viewmodel.AddEditEvent
+import com.app.todolist.presentation.screens.add_edit_task.viewmodel.AddEditTodoViewModel
+import com.app.todolist.presentation.screens.add_edit_task.viewmodel.AddEditUIEvent
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -153,7 +152,7 @@ fun AddEditTodoScreen(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     PriorityView(
-                        defaultPrority = state.tasksPriority, readOnly = state.isCompleted,
+                        defaultPriority = state.taskPriority, showOnlySelected = state.isCompleted,
                     ) {
                         it?.let {
                             viewModel.onEvent(AddEditEvent.EnterPriority(it))
@@ -225,6 +224,7 @@ fun AddEditTodoScreen(
                                     AppButton(buttonText = R.string.cancel,
                                         modifier = Modifier.weight(1f),
                                         isDisabled = false,
+                                        isSecondary = true,
                                         onClick = {
                                             navController.navigateUp()
                                         })

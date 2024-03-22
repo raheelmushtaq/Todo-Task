@@ -5,13 +5,13 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.app.todolist.data.models.TodoTask
+import com.app.todolist.presentation.models.Tasks
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class NotificationScheduler(private val context: Context) {
-    fun scheduleNotificationWork(todoTask: TodoTask) {
-        scheduleNotificationWork(context, todoTask)
+    fun scheduleNotificationWork(tasks: Tasks) {
+        scheduleNotificationWork(context, tasks)
     }
 
 
@@ -39,15 +39,15 @@ class NotificationScheduler(private val context: Context) {
     }
 
 
-    fun scheduleNotificationWork(context: Context, todoTask: TodoTask) {
-        val time = calculateDelay(todoTask.date)
+    fun scheduleNotificationWork(context: Context, tasks: Tasks) {
+        val time = calculateDelay(tasks.date)
         if (time > 0) {
             val notificationWorkRequest = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
-                .setInputData(workDataOf("content" to todoTask.title))
+                .setInputData(workDataOf("content" to tasks.title))
                 .setInitialDelay(time, TimeUnit.MILLISECONDS).build()
 
             WorkManager.getInstance(context).enqueueUniqueWork(
-                "notification_${todoTask.id}", ExistingWorkPolicy.REPLACE, notificationWorkRequest
+                "notification_${tasks.id}", ExistingWorkPolicy.REPLACE, notificationWorkRequest
             )
         }
     }
