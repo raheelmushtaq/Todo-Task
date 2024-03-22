@@ -1,19 +1,12 @@
 package com.app.todolist.datastore
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import androidx.lifecycle.asLiveData
 import com.app.todolist.data.models.AppSettings
-import com.app.todolist.data.models.TodoFilters
 import com.app.todolist.data.models.TodoTask
-import com.app.todolist.presentation.screens.settings.modal.Languages
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<AppSettings> by dataStore(
@@ -25,16 +18,6 @@ class DataStoreHandler(private val context: Context) {
 
 
     fun getAppSettings() = context.dataStore.data
-
-    suspend fun changeLanguage(language: Languages) {
-        context.dataStore.updateData { appSettings ->
-            appSettings.copy(appLanguage = language)
-        }
-    }
-
-    fun getLanguage(): Flow<Languages> {
-        return context.dataStore.data.map { it.appLanguage}
-    }
 
     suspend fun saveTask(tasks: List<TodoTask>) {
         context.dataStore.updateData { appSettings ->

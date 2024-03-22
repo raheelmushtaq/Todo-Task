@@ -28,7 +28,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -36,19 +35,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.core.os.LocaleListCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.app.todolist.R
 import com.app.todolist.presentation.components.appheader.AppHeader
 import com.app.todolist.presentation.components.textfields.MediumText
-import com.app.todolist.presentation.screens.settings.viewmodel.SettingsScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    navController: NavController, viewModel: SettingsScreenViewModel = hiltViewModel()
+    navController: NavController
 ) {
-    val state = viewModel.dataState.value
 
     val focusManager = LocalFocusManager.current
 
