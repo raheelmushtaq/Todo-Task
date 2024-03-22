@@ -32,7 +32,6 @@ import androidx.navigation.NavController
 import com.app.todolist.R
 import com.app.todolist.presentation.screens.splash.viewmodel.SplashViewModel
 import com.app.todolist.presentation.screens_routes.ScreenRoutes
-import com.app.todolist.utils.LanguageUtils
 import com.app.todolist.utils.PermissionUtil
 import kotlinx.coroutines.flow.collectLatest
 

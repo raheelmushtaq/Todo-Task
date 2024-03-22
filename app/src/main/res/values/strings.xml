@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">TodoList</string>
+    <string name="app_name" translatable="false">TodoList</string>
+    <string name="en" translatable="false">English</string>
+    <string name="ar" translatable="false">العربية</string>
     <string name="back">Back</string>
     <string name="save">Save</string>
     <string name="update">Update</string>
@@ -40,7 +42,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="change_language">Change Language</string>
     <string name="change_language_confirmation">Are you sure you want to change Language?</string>
-    <string name="languge">Language</string>
+    <string name="language">Language</string>
     <string name="low">Low</string>
     <string name="medium">Medium</string>
     <string name="high">High</string>
@@ -50,4 +52,5 @@
     <string name="due_time">Due Time</string>
     <string name="reminder_for_app_delay">Reminder for the Task Due</string>
     <string name="completed_task">Completed Task</string>
+    <string name="selected_language">English</string>
 </resources>

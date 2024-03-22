@@ -57,7 +57,7 @@ fun TodoListScreen(
             AppHeader(
                 navController = navController,
                 title = stringResource(id = R.string.app_name),
-                showSettingsIcon = false
+                showSettingsIcon = true
             )
 
         },

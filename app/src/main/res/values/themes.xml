@@ -7,5 +7,5 @@
         <item name="postSplashScreenTheme">@style/Theme.TodoList</item>
     </style>
 
-    <style name="Theme.TodoList" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.TodoList" parent="Theme.AppCompat.Light.NoActionBar" />
 </resources>

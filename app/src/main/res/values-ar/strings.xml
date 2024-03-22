@@ -40,10 +40,11 @@
     <string name="dismiss">رفض</string>
     <string name="change_language">تغيير اللغة</string>
     <string name="change_language_confirmation">هل أنت متأكد أنك تريد تغيير اللغة؟</string>
-    <string name="languge">لغة</string>
+    <string name="language">لغة</string>
     <string name="low">قليل</string>
     <string name="medium">واسطة</string>
     <string name="high">عالي</string>
     <string name="mark_as_complete">Mark Complete</string>
+    <string name="selected_language">العربية</string>
 
 </resources>
