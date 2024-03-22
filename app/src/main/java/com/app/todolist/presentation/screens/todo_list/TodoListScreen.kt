@@ -15,8 +15,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,10 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.app.todolist.R
-import com.app.todolist.datastore.DataStoreViewModel
 import com.app.todolist.presentation.components.appheader.AppHeader
 import com.app.todolist.presentation.components.bottomsheets.filter.FilterBottomSheet
 import com.app.todolist.presentation.components.edittext.SearchEditTextField
@@ -40,9 +36,9 @@ import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.presentation.screens.todo_list.component.TodoListItem
 import com.app.todolist.presentation.screens.todo_list.viewmodel.TodoListUIEvent
 import com.app.todolist.presentation.screens.todo_list.viewmodel.TodoListViewModel
-import com.app.todolist.ui.theme.TodoListTheme
 import com.app.todolist.presentation.screens_routes.ScreenParams.TASK_ID
 import com.app.todolist.presentation.screens_routes.ScreenRoutes
+import com.app.todolist.ui.theme.TodoListTheme
 
 @Composable
 fun TodoListScreen(
