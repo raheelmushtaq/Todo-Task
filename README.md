@@ -1,71 +1,62 @@
 # Todo List
 
-**This Project is implemented using.**
-* Android Studio.
+
+**Screens**
+
+<p float="left">
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_1.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/Todo-Task/main/screens/Screen_1.png" width="200" height="400" />
+
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_2.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/Todo-Task/main/screens/Screen_2.png" width="200" height="400" />
+
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_3.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/Todo-Task/main/screens/Screen_3.png" width="200" height="400" />
+</p>
+
+<p float="left">
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_4.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/Todo-Task/main/screens/Screen_4.png" width="200" height="400" />
+
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_5.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/Todo-Task/main/screens/Screen_5.png" width="200" height="400" />
+
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_3.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/Todo-Task/main/screens/Screen_6.png" width="200" height="400" />
+</p>
+
+**This Project is built using.**
 * Kotlin
-* Compose
-
-**Architecture of Project:**
-* MVVM with Jetpack Compose.
-
-**Api Calling Libraries**
-
-* Retrofit.
-* implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-* implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-* implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-* implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
-
-**Storage**
-
+* MVVM Clean Architecture
+* Compose UI
+* Retrofit
+* Hilt DI
+* Unit Testing
+* Kotlin Flow
+* Compose State
 * DataStore
+* WorkManager
+* <a href="https://developer.android.com/build/migrate-to-catalogs">Gradle version catalogs</a>
 
+**Folder Structure**
 
-**All Libraries**
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_3.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/blob/main/screens/Screen_1.png" width="200" height="400" />
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+* **datastore**: This package contains all the handling related to data source
+* **di**: This package contains the Hilt DI
+* **network**: This package contains the handling for retrofit
+* **notification**: This package contains the for showing the notifications
+* **presentation**: this package contains all the handling related to the screes
+  * **component**: This sub-package contains all the custom components used in the application
+  * **models**: This package has the data class used in the screen I.e Tasks
+  * **screens**: This package contains all the screens and their functionality
+      * **components**:  This package will hold the sub-components that are used only for this screen
+      * **state_event**: This package holds the classes that are used for communication between the ViewModel and the Compose Screens.
+      * **viewmodel**: this package contains the ViewModel
+  * **utils**: This package contains util class related to these screens
+* **utils**:  This package holds the utils classes related to the application.
 
-    //navigation
-    val raamCastaComposeVersion = "1.9.57"
-    implementation("io.github.raamcosta.compose-destinations:core:${raamCastaComposeVersion}")
-    implementation("io.github.raamcosta.compose-destinations:animations-core:${raamCastaComposeVersion}")
-    implementation("io.github.raamcosta.compose-destinations:wear-core:${raamCastaComposeVersion}")
-    ksp("io.github.raamcosta.compose-destinations:ksp:${raamCastaComposeVersion}")
-
-    // splash screen
-    implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
-
-    // Compose dependencies
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
-    //Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    kapt("com.google.dagger:hilt-compiler:2.48.1")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
-
-    // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    
-    // Room
-    implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.room:room-paging:2.6.1")
-
+**Reference Material**
+* https://developer.android.com/topic/libraries/architecture/datastore#prefs-vs-proto
+* https://developer.android.com/codelabs/android-preferences-datastore#1
+* https://medium.com/androiddevelopers/datastore-and-kotlin-serialization-8b25bf0be66c
+* https://www.youtube.com/watch?v=yMGAbm84iIY&t=975s&ab_channel=PhilippLackner
+* https://programmerofpersia.medium.com/how-to-serialize-deserialize-a-persistentlist-persistentmap-with-kotlinx-serialization-72a11a226e56
+  
 
 Developer.
 Raheel Mushtaq raheelmushtaq41@gmail.com
