@@ -5,7 +5,6 @@ datastore = "1.0.0"
 kotlinxCollectionsImmutable = "0.3.5"
 kotlinxSerializationJson = "1.5.1"
 maxkeppeler = "1.0.2"
-datastorePreferences = "1.0.0"
 androidx-hiltCompiler = "1.2.0"
 androidx-junit = "1.1.5"
 converterGson = "2.9.0"
@@ -16,7 +15,7 @@ hiltCompiler = "2.48.1"
 hiltAndroid = "2.49"
 hiltNavigationCompose = "1.2.0"
 junit = "4.13.2"
-junit-jupiter = "5.8.1"
+junit-jupiter = "5.8.2"
 kotlinxCoroutinesAndroid = "1.7.3"
 kotlinxCoroutinesCore = "1.7.3"
 lifecycle-runtime-ktx = "2.7.0"
@@ -24,13 +23,15 @@ compose-bom = "2024.02.02"
 android-application = "8.2.2"
 kotlin-version = "1.9.0"
 hilt-version = "2.48.1"
-ksp-version = "1.9.20-1.0.14"
 navigationCompose = "2.7.7"
-raamCastaComposeVersion = "1.9.57"
 retrofit = "2.9.0"
 kotlin-serializeable-version = "1.6.10"
 appcompat = "1.6.1"
+google-truth = "0.40"
 workRuntimeKtx = "2.9.0"
+junitKtx = "1.1.5"
+monitor = "1.6.1"
+datastorePreferencesCore = "1.0.0"
 
 [libraries]
 android-permissions = { module = "io.github.nishkarsh:android-permissions", version.ref = "androidPermissions" }
@@ -65,17 +66,16 @@ junit = { module = "junit:junit", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
-raam-casta-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "raamCastaComposeVersion" }
-raam-casta-animations-core = { module = "io.github.raamcosta.compose-destinations:animations-core", version.ref = "raamCastaComposeVersion" }
-raam-casta-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "raamCastaComposeVersion" }
-raam-casta-wear-core = { module = "io.github.raamcosta.compose-destinations:wear-core", version.ref = "raamCastaComposeVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
+androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastorePreferencesCore" }
+google-truth = { module = "com.google.truth:truth", version.ref = "google-truth" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "android-application" }
 androidKotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-version" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-version" }
 kotlin-serializeable = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serializeable-version" }

@@ -54,5 +54,6 @@
     <string name="ascending">تصاعدي</string>
     <string name="descending">تنازلي</string>
     <string name="ok">نعم</string>
+    <string name="reminder">تذكير</string>
 
 </resources>

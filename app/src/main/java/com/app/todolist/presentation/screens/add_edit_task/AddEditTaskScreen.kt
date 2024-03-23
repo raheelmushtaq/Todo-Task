@@ -1,9 +1,7 @@
 package com.app.todolist.presentation.screens.add_edit_task
 
 import android.icu.util.Calendar
-import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -54,7 +52,6 @@ import com.maxkeppeler.sheets.calendar.models.CalendarTimeline
 import kotlinx.coroutines.flow.collectLatest
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditTodoScreen(
@@ -82,7 +79,7 @@ fun AddEditTodoScreen(
                 is AddEditUIEvent.Success -> {
                     Toast.makeText(
                         context,
-                        context.getString(if (taskId.toInt() == -1) R.string.task_added_successfully else R.string.task_updated_successfuly),
+                        context.getString(if (taskId == -1) R.string.task_added_successfully else R.string.task_updated_successfuly),
                         Toast.LENGTH_LONG
                     ).show()
                     navController.navigateUp()
@@ -118,9 +115,9 @@ fun AddEditTodoScreen(
         AppHeader(
             showBackButton = true, navController = navController, title = stringResource(id = title)
         )
-    }) {
+    }) { padding ->
 
-        Column(modifier = Modifier.padding(it)) {
+        Column(modifier = Modifier.padding(padding)) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -135,7 +132,13 @@ fun AddEditTodoScreen(
                     AppEditTextField(textFieldValue = state.title,
                         hint = stringResource(id = R.string.title),
                         readOnly = state.isCompleted,
-                        onValueChange = { viewModel.onEvent(AddEditActionEvent.EnterTitle(it)) },
+                        onValueChange = { text ->
+                            viewModel.onEvent(
+                                AddEditActionEvent.EnterTitle(
+                                    text
+                                )
+                            )
+                        },
                         onDone = { focusManager.clearFocus() })
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -163,12 +166,12 @@ fun AddEditTodoScreen(
                         readOnly = state.isCompleted
                     ) {
                         it?.let {
-                            viewModel.onEvent(AddEditActionEvent.EnterCategory(it ?: ""))
+                            viewModel.onEvent(AddEditActionEvent.EnterCategory(it))
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Column() {
+                    Column {
 
                         MediumText(
                             text = stringResource(id = R.string.due_date),
@@ -187,8 +190,11 @@ fun AddEditTodoScreen(
                             .padding(start = 20.dp, end = 10.dp),
                             verticalAlignment = Alignment.CenterVertically) {
                             MediumText(
-                                text = if (state.date.isNotEmpty()) state.date else "DD-MM-YYYY",
-                                color = if (state.date.isNotEmpty()) Color.Black else Color.Gray
+                                text = state.date.ifEmpty { "DD-MM-YYYY" },
+                                color = if (state.date.isNotEmpty())
+                                    Color.Black
+                                else
+                                    Color.Gray
                             )
 
                             Spacer(modifier = Modifier.width(10.dp))

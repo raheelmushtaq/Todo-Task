@@ -52,7 +52,7 @@ fun SplashScreen(
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
                 is SplashViewModel.UIEvent.Success -> {
-                    navController.navigate(ScreenRoutes.TaskLisstScreen.route) {
+                    navController.navigate(ScreenRoutes.TaskListScreen.route) {
                         launchSingleTop = true
                         popUpTo(ScreenRoutes.SplashScreen.route) {
                             inclusive = true
@@ -123,14 +123,14 @@ fun SplashScreen(
 }
 
 
-private fun runWithNotificationPermissionCheck(context: Context, onPremission: (() -> Unit)) {
+private fun runWithNotificationPermissionCheck(context: Context, onPermission: (() -> Unit)) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         PermissionUtil.requestPermission(
             context, android.Manifest.permission.POST_NOTIFICATIONS
         ) {
-            onPremission.invoke()
+            onPermission.invoke()
         }
     } else {
-        onPremission.invoke()
+        onPermission.invoke()
     }
 }

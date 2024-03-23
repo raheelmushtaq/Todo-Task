@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.androidKotlin)
     alias(libs.plugins.hiltAndroid)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serializeable)
     id("kotlin-kapt")
     id("kotlin-parcelize")
@@ -14,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.app.todolist"
-        minSdk = 25
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +51,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -68,12 +69,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.work.runtime.ktx)
-
-    //navigation
-//    implementation(libs.raam.casta.core)
-//    implementation(libs.raam.casta.animations.core)
-//    implementation(libs.raam.casta.wear.core)
-    ksp(libs.raam.casta.ksp)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.monitor)
+    implementation(libs.androidx.datastore.preferences.core)
 
 
     // splash screen
@@ -106,8 +104,6 @@ dependencies {
     implementation(libs.android.permissions)
 
 
-
-
     implementation(libs.maxkeppeler.core)
     implementation(libs.maxkeppeler.calendar)
     implementation(libs.maxkeppeler.clock)
@@ -122,4 +118,10 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    testImplementation(libs.google.truth)
+    androidTestImplementation(libs.google.truth)
+
+
+
 }

@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                         SplashScreen(navController = navController)
                     }
 
-                    composable(route = ScreenRoutes.TaskLisstScreen.route) {
+                    composable(route = ScreenRoutes.TaskListScreen.route) {
                         TodoListScreen(navController = navController)
                     }
                     composable(

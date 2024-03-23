@@ -32,7 +32,7 @@ class AddEditTodoViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private var _dataState = mutableStateOf<AddEditDataState>(AddEditDataState())
+    private var _dataState = mutableStateOf(AddEditDataState())
     val dataState: State<AddEditDataState> = _dataState
 
     private val _addEditUiEvent = MutableSharedFlow<AddEditUIEvent>()
@@ -41,7 +41,7 @@ class AddEditTodoViewModel @Inject constructor(
     private val _appSettings = mutableStateOf(AppSettings())
     val appSettings: MutableState<AppSettings> = _appSettings
 
-    var currentTaskId: Int = -1
+    private var currentTaskId: Int = -1
 
 
     init {
@@ -52,7 +52,7 @@ class AddEditTodoViewModel @Inject constructor(
         }
 
         savedStateHandle.get<Int>(TASK_ID)?.let { taskId ->
-            if (taskId.toInt() != -1) {
+            if (taskId != -1) {
                 getTaskById(taskId)
             }
         }

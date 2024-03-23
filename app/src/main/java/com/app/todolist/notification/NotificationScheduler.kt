@@ -13,9 +13,7 @@ class NotificationScheduler(private val context: Context) {
     fun scheduleNotificationWork(tasks: Tasks) {
         scheduleNotificationWork(context, tasks)
     }
-
-
-    fun calculateDelay(date: String): Long {
+    private fun calculateDelay(date: String): Long {
         // Get the current time
 
 
@@ -39,7 +37,7 @@ class NotificationScheduler(private val context: Context) {
     }
 
 
-    fun scheduleNotificationWork(context: Context, tasks: Tasks) {
+    private fun scheduleNotificationWork(context: Context, tasks: Tasks) {
         val time = calculateDelay(tasks.date)
         if (time > 0) {
             val notificationWorkRequest = OneTimeWorkRequest.Builder(NotificationWorker::class.java)

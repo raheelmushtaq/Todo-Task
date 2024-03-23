@@ -24,19 +24,23 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
     }
 
     private fun showNotification(content: String) {
-        val channelId = "task_reminder_channel"
+        val channelId = applicationContext.getString(R.string.task_reminder_channel)
         val notificationId = System.currentTimeMillis()
         val notificationManager = NotificationManagerCompat.from(applicationContext)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelId, "task_reminder_channel", NotificationManager.IMPORTANCE_DEFAULT
+                channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)
         }
 
         val notification =
-            NotificationCompat.Builder(applicationContext, channelId).setContentTitle("Reminder")
+            NotificationCompat.Builder(applicationContext, channelId).setContentTitle(
+                applicationContext.getString(
+                    R.string.reminder
+                )
+            )
                 .setContentText(content).setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT).build()
 

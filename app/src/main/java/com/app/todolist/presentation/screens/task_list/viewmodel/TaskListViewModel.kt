@@ -5,14 +5,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.todolist.datastore.model.AppSettings
-import com.app.todolist.presentation.utils.filters.OrderBy
-import com.app.todolist.presentation.utils.filters.TaskFilters
-import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.datastore.DataStoreHandler
+import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
 import com.app.todolist.presentation.screens.task_list.state_event.TaskListDataState
+import com.app.todolist.presentation.utils.filters.OrderBy
 import com.app.todolist.presentation.utils.filters.SortBy
+import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.utils.DebounceSearchUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataStoreHandler) :
+class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataStoreHandler) :
     ViewModel() {
     private val _appSettings = mutableStateOf(AppSettings())
 
@@ -127,6 +126,5 @@ class TodoListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                 }
             }
         }
-
     }
 }

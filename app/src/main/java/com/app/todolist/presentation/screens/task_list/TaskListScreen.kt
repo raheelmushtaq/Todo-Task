@@ -36,7 +36,7 @@ import com.app.todolist.presentation.components.textfields.LargeText
 import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.presentation.screens.task_list.component.TodoListItem
 import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
-import com.app.todolist.presentation.screens.task_list.viewmodel.TodoListViewModel
+import com.app.todolist.presentation.screens.task_list.viewmodel.TaskListViewModel
 import com.app.todolist.presentation.utils.screens.ScreenParams.TASK_ID
 import com.app.todolist.presentation.utils.screens.ScreenRoutes
 import com.app.todolist.ui.theme.TodoListTheme
@@ -44,7 +44,7 @@ import com.app.todolist.ui.theme.TodoListTheme
 @Composable
 fun TodoListScreen(
     navController: NavController,
-    viewModel: TodoListViewModel = hiltViewModel(),
+    viewModel: TaskListViewModel = hiltViewModel(),
 ) {
     val state = viewModel.dataState.value
     val appSettings = viewModel.dataStoreLiveState.value
@@ -86,8 +86,7 @@ fun TodoListScreen(
                 if (state.isLoading) {
                     Loader(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    Column(
-                    ) {
+                    Column {
 
                         SearchEditTextField(
                             textFieldValue = state.searchText,

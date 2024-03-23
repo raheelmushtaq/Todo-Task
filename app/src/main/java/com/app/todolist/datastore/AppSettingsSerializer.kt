@@ -1,6 +1,5 @@
 package com.app.todolist.datastore
 
-import android.util.Log
 import androidx.datastore.core.Serializer
 import com.app.todolist.datastore.model.AppSettings
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,6 @@ class AppSettingsSerializer(override val defaultValue: AppSettings = AppSettings
                 deserializer = AppSettings.serializer(), string = input.readBytes().decodeToString()
             )
         } catch (ex: Exception) {
-            Log.d("xxxx", "readFrom: ${ex.localizedMessage}")
             ex.printStackTrace()
             defaultValue
         }

@@ -56,5 +56,7 @@
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="ok">Ok</string>
+    <string name="task_reminder_channel" translatable="false">task_reminder_channel</string>
+    <string name="reminder">Reminder</string>
 
 </resources>

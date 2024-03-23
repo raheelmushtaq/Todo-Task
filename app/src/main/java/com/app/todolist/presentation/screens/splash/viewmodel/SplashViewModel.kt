@@ -29,7 +29,7 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
     data class SplashUIData(val isLoading: Boolean = false, val isError: Boolean = false)
 
-    sealed class UIEvent() {
+    sealed class UIEvent {
         data object Success : UIEvent()
         data class Error(val message: Int) : UIEvent()
     }

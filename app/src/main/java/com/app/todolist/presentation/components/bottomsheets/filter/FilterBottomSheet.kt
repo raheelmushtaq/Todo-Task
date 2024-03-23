@@ -1,8 +1,6 @@
 package com.app.todolist.presentation.components.bottomsheets.filter
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,15 +8,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -33,14 +27,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.todolist.R
-import com.app.todolist.presentation.utils.filters.OrderBy
-import com.app.todolist.presentation.utils.filters.TaskPriority
-import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.presentation.components.bottomsheets.BottomSheetDialog
 import com.app.todolist.presentation.components.button.AppButton
 import com.app.todolist.presentation.components.category.CategoryView
 import com.app.todolist.presentation.components.textfields.MediumText
+import com.app.todolist.presentation.utils.filters.OrderBy
 import com.app.todolist.presentation.utils.filters.SortBy
+import com.app.todolist.presentation.utils.filters.TaskFilters
+import com.app.todolist.presentation.utils.filters.TaskPriority
 
 @Composable
 fun FilterBottomSheet(
@@ -251,7 +245,7 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
     Spacer(modifier = Modifier.height(5.dp))
 
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-        orderByList.forEachIndexed { index, ordrBy ->
+        orderByList.forEachIndexed { index, orderBy ->
             SegmentedButton(
                 shape = SegmentedButtonDefaults.itemShape(
                     index = index,
@@ -260,21 +254,20 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
                     activeContainerColor = Color.White,
                     inactiveContainerColor = Color.White,
                 ), onClick = {
-                    if (selectedOrderBy.value != ordrBy) {
-                        selectedOrderBy.value = ordrBy
-                        onSelect(ordrBy)
+                    if (selectedOrderBy.value != orderBy) {
+                        selectedOrderBy.value = orderBy
+                        onSelect(orderBy)
                     }
 
-                }, selected = selectedOrderBy.value == ordrBy
+                }, selected = selectedOrderBy.value == orderBy
             ) {
-                MediumText(text = stringResource(id = ordrBy.keyRes))
+                MediumText(text = stringResource(id = orderBy.keyRes))
             }
         }
     }
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesFilterView(
     defaultValue: String?,
