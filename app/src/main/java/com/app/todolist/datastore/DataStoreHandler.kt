@@ -6,8 +6,6 @@ import androidx.datastore.dataStore
 import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.models.Tasks
 import kotlinx.collections.immutable.mutate
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 val Context.dataStore: DataStore<AppSettings> by dataStore(

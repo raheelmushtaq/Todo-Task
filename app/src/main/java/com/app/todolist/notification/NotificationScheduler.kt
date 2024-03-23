@@ -8,11 +8,14 @@ import androidx.work.workDataOf
 import com.app.todolist.presentation.models.Tasks
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class NotificationScheduler(private val context: Context) {
-    fun scheduleNotificationWork(tasks: Tasks) {
+class NotificationScheduler @Inject constructor(private val context: Context) :
+    NotificationSchedulerInterface {
+    override fun scheduleNotificationWork(tasks: Tasks) {
         scheduleNotificationWork(context, tasks)
     }
+
     private fun calculateDelay(date: String): Long {
         // Get the current time
 

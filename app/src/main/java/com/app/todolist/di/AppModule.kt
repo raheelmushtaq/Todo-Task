@@ -6,6 +6,7 @@ import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.datastore.DataStoreHandlerInterface
 import com.app.todolist.network.ApiClient
 import com.app.todolist.notification.NotificationScheduler
+import com.app.todolist.notification.NotificationSchedulerInterface
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -33,7 +34,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNotificationScheduler(@ApplicationContext context: Context) =
+    fun provideNotificationScheduler(@ApplicationContext context: Context): NotificationSchedulerInterface =
         NotificationScheduler(context)
 
     @Singleton

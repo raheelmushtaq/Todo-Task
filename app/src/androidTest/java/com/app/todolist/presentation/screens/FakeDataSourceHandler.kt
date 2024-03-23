@@ -1,31 +1,38 @@
 package com.app.todolist.presentation.screens
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import com.app.todolist.datastore.DataStoreHandlerInterface
 import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.models.Tasks
 import kotlinx.collections.immutable.mutate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.withContext
 
 class FakeDataSourceHandler : DataStoreHandlerInterface {
-
     private var appSettings = AppSettings()
-    override fun getAppSettings(): Flow<AppSettings> = flowOf(appSettings)
+
+    private var _settings = MutableLiveData<AppSettings>()
+
+    override fun getAppSettings(): Flow<AppSettings> = _settings.asFlow()
 
     override suspend fun addTasks(tasks: List<Tasks>) {
         appSettings = appSettings.copy(tasks = appSettings.tasks.mutate { list ->
             list.clear()
             list.addAll(tasks)
         }, recordCount = tasks.size)
+        emitData()
     }
 
     override suspend fun updateTask(task: Tasks) {
         appSettings = appSettings.copy(tasks = appSettings.tasks.mutate { list ->
             val index = list.indexOfFirst { item -> item.id == task.id }
             if (index != -1) list[index] = task
-            list
         })
+        emitData()
     }
+
 
     override suspend fun addTask(task: Tasks) {
         appSettings = appSettings.copy(
@@ -33,6 +40,7 @@ class FakeDataSourceHandler : DataStoreHandlerInterface {
                 list.add(task)
             }, recordCount = appSettings.recordCount + 1
         )
+        emitData()
     }
 
     override suspend fun deleteTasks(task: Tasks) {
@@ -41,6 +49,8 @@ class FakeDataSourceHandler : DataStoreHandlerInterface {
             if (index != -1) list.removeAt(index)
             list
         })
+        emitData()
+
     }
 
     override suspend fun saveCategories(categories: List<String>) {
@@ -48,6 +58,21 @@ class FakeDataSourceHandler : DataStoreHandlerInterface {
             list.clear()
             list.addAll(categories)
         })
+        emitData()
+    }
+
+    fun getTask(): List<Tasks> {
+        return appSettings.tasks.toList()
+    }
+
+    fun getCategories(): List<String> {
+        return appSettings.categories.toList()
+    }
+
+    suspend fun emitData() {
+        withContext(Dispatchers.Main) {
+            _settings.value = appSettings
+        }
     }
 
 

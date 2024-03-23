@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.datastore.DataStoreHandlerInterface
 import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
@@ -35,7 +34,7 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
 
     init {
         viewModelScope.launch {
-            dataStoreHandler.getAppSettings().onEach {
+            dataStoreHandler. getAppSettings().onEach {
                 _appSettings.value = it
                 _dataStoreLiveState.value = it
                 getTasks(dataState.value.searchText, dataState.value.taskFilters)

@@ -7,9 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.R
-import com.app.todolist.datastore.DataStoreHandler
+import com.app.todolist.datastore.DataStoreHandlerInterface
 import com.app.todolist.datastore.model.AppSettings
-import com.app.todolist.notification.NotificationScheduler
+import com.app.todolist.notification.NotificationSchedulerInterface
 import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.presentation.screens.add_edit_task.state_event.AddEditActionEvent
 import com.app.todolist.presentation.screens.add_edit_task.state_event.AddEditDataState
@@ -26,8 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditTodoViewModel @Inject constructor(
-    private val dataStoreHandler: DataStoreHandler,
-    private val notificationScheduler: NotificationScheduler,
+    private val dataStoreHandler: DataStoreHandlerInterface,
+    private val notificationScheduler: NotificationSchedulerInterface,
     savedStateHandle: SavedStateHandle
 
 ) : ViewModel() {
@@ -53,40 +53,41 @@ class AddEditTodoViewModel @Inject constructor(
 
         savedStateHandle.get<Int>(TASK_ID)?.let { taskId ->
             if (taskId != -1) {
-                getTaskById(taskId)
+                val task = getTaskById(taskId)
+                updateTaskData(task)
             }
         }
     }
 
-    private fun getTaskById(taskId: Int) {
-        viewModelScope.launch {
-            val filterTasks = _appSettings.value.tasks.toList().filter { task -> task.id == taskId }
-            val task = if (filterTasks.isNotEmpty()) {
-                filterTasks[0]
-            } else null
-            if (task != null) {
-                currentTaskId = task.id
+    public fun getTaskById(taskId: Int): Tasks? {
+        val filterTasks = _appSettings.value.tasks.toList().filter { task -> task.id == taskId }
+        return if (filterTasks.isNotEmpty()) {
+            filterTasks[0]
+        } else null
+    }
+
+    private fun updateTaskData(task: Tasks?) {
+        if (task != null) {
+            currentTaskId = task.id
 
 
-                val priority = arrayListOf(
-                    TaskPriority.Low, TaskPriority.Medium, TaskPriority.High
-                ).filter {
-                    it.value.equals(
-                        task.priority.ifEmpty { TaskPriority.Low.value }, true
-                    )
-                }[0]
-                _dataState.value = _dataState.value.copy(
-                    title = task.title,
-                    description = task.description,
-                    taskPriority = priority,
-                    category = task.category,
-                    isCompleted = task.isCompleted,
-                    date = task.date,
+            val priority = arrayListOf(
+                TaskPriority.Low, TaskPriority.Medium, TaskPriority.High
+            ).filter {
+                it.value.equals(
+                    task.priority.ifEmpty { TaskPriority.Low.value }, true
                 )
-            }
+            }[0]
+            _dataState.value = _dataState.value.copy(
+                title = task.title,
+                description = task.description,
+                taskPriority = priority,
+                category = task.category,
+                isCompleted = task.isCompleted,
+                date = task.date,
+            )
         }
     }
-
 
     fun onEvent(event: AddEditActionEvent) {
         when (event) {
@@ -95,13 +96,11 @@ class AddEditTodoViewModel @Inject constructor(
             }
 
             is AddEditActionEvent.EnterDescription -> {
-                _dataState.value =
-                    dataState.value.copy(description = event.text)
+                _dataState.value = dataState.value.copy(description = event.text)
             }
 
             is AddEditActionEvent.EnterPriority -> {
-                _dataState.value =
-                    dataState.value.copy(taskPriority = event.taskPriority)
+                _dataState.value = dataState.value.copy(taskPriority = event.taskPriority)
             }
 
             is AddEditActionEvent.EnterCategory -> {
@@ -113,65 +112,78 @@ class AddEditTodoViewModel @Inject constructor(
             }
 
             is AddEditActionEvent.SaveNote -> {
-                validateNote()
-            }
-        }
-    }
-
-    private fun validateNote() {
-        var errorId = -1
-        if (dataState.value.title.isEmpty()) {
-            errorId = R.string.title_is_required
-        } else if (dataState.value.description.isEmpty()) {
-            errorId = R.string.description_is_required
-        } else if (dataState.value.taskPriority == null) {
-            errorId = R.string.priority_is_required
-        } else if (dataState.value.category == null) {
-            errorId = R.string.category_is_required
-        } else if (dataState.value.date.isEmpty()) {
-            errorId = R.string.due_date_is_required
-        }
-
-        if (errorId != -1) {
-            viewModelScope.launch {
-                _addEditUiEvent.emit(AddEditUIEvent.Error(errorId))
-            }
-        } else {
-            saveNote()
-        }
-    }
-
-    private fun saveNote() {
-        viewModelScope.launch {
-
-            try {
 
                 val isEditTask = currentTaskId != -1
                 val id = if (isEditTask) currentTaskId else appSettings.value.recordCount + 1
-                val task = Tasks(
+
+                saveTask(
                     id = id,
                     title = dataState.value.title,
                     description = dataState.value.description,
-                    category = dataState.value.category.toString(),
+                    category = dataState.value.category,
                     date = dataState.value.date,
-                    priority = dataState.value.taskPriority?.value ?: TaskPriority.Low.value,
+                    priority = dataState.value.taskPriority?.value,
                     isCompleted = false,
+                    isEditTask
                 )
-                if (isEditTask) {
-                    dataStoreHandler.updateTask(task)
-                } else {
-                    dataStoreHandler.addTask(task)
-                }
-                notificationScheduler.scheduleNotificationWork(task)
-
-                _addEditUiEvent.emit(AddEditUIEvent.Success)
-
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-                _addEditUiEvent.emit(AddEditUIEvent.Error(R.string.unable_to_save_task))
             }
         }
     }
 
+    public fun saveTask(
+        id: Int,
+        title: String,
+        description: String,
+        category: String?,
+        date: String,
+        priority: String?,
+        isCompleted: Boolean,
+        isEditTask: Boolean
+    ) {
+        viewModelScope.launch {
+            var errorId = -1
+            if (title.isEmpty()) {
+                errorId = R.string.title_is_required
+            } else if (description.isEmpty()) {
+                errorId = R.string.description_is_required
+            } else if (priority == null) {
+                errorId = R.string.priority_is_required
+            } else if (category == null) {
+                errorId = R.string.category_is_required
+            } else if (date.isEmpty()) {
+                errorId = R.string.due_date_is_required
+            }
+
+            if (errorId != -1) {
+                viewModelScope.launch {
+                    _addEditUiEvent.emit(AddEditUIEvent.Error(errorId))
+                }
+            } else {
+                try {
+                    val task = Tasks(
+                        id = id,
+                        title = title,
+                        description = description,
+                        category = category.toString(),
+                        date = date,
+                        priority = priority.toString(),
+                        isCompleted = isCompleted,
+                    )
+                    if (isEditTask) {
+                        dataStoreHandler.updateTask(task)
+                    } else {
+                        dataStoreHandler.addTask(task)
+                    }
+                    notificationScheduler.scheduleNotificationWork(task)
+
+                    _addEditUiEvent.emit(AddEditUIEvent.Success)
+
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                    _addEditUiEvent.emit(AddEditUIEvent.Error(R.string.unable_to_save_task))
+                }
+            }
+        }
+    }
 
 }
