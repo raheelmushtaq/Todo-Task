@@ -56,16 +56,10 @@
 <img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" data-canonical-src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" width="220" height="200" />
 </p>
 
-* screens
-   * add_edit_task
-      * ViewModel
-        * AddEditTodoViewModelTest
-      * FakeNotificationScheduler
-   * task_list
-     * viewmodel
-        * TaskListViewModelTest
-     * DataProvider
-     * FakeDataSourceHandler
+* **add_edit_task**: This package contains the Unit test code for AddEditTestViewModel
+* **task_list**: This package contains the Unit test code for TaskListViewModel
+* **DataProvider**: This class holds the basic data that is used for testing
+* **FakeDataSourceHandle**r: This is the Datasource used to perform Testing
 
 
 
