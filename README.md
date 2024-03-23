@@ -69,7 +69,3 @@
 * https://medium.com/androiddevelopers/datastore-and-kotlin-serialization-8b25bf0be66c
 * https://www.youtube.com/watch?v=yMGAbm84iIY&t=975s&ab_channel=PhilippLackner
 * https://programmerofpersia.medium.com/how-to-serialize-deserialize-a-persistentlist-persistentmap-with-kotlinx-serialization-72a11a226e56
-  
-
-Developer.
-Raheel Mushtaq raheelmushtaq41@gmail.com
