@@ -53,7 +53,7 @@
 
 **Unit test**
 <p> 
-<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" data-canonical-src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" width="200" height="400" />
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" data-canonical-src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" width="220" height="200" />
 </p>
 
 * screens
