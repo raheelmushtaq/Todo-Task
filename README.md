@@ -34,12 +34,12 @@
 
 **Folder Structure**
 
-<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Screen_3.png" data-canonical-src="https://github.com/raheelmushtaq/AssessmentTest/blob/main/screens/Screen_1.png" width="200" height="400" />
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_1.png" data-canonical-src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_1.png" width="200" height="400" />
 
-* **datastore**: This package contains all the handling related to data source
+* **datastore**: This package contains all the handling related to the data source
 * **di**: This package contains the Hilt DI
 * **network**: This package contains the handling for retrofit
-* **notification**: This package contains the for showing the notifications
+* **notification**: This package contains the handling for showing the notifications
 * **presentation**: this package contains all the handling related to the screes
   * **component**: This sub-package contains all the custom components used in the application
   * **models**: This package has the data class used in the screen I.e Tasks
@@ -49,6 +49,25 @@
       * **viewmodel**: this package contains the ViewModel
   * **utils**: This package contains util class related to these screens
 * **utils**:  This package holds the utils classes related to the application.
+
+
+**Unit test**
+<p> 
+<img src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" data-canonical-src="https://github.com/raheelmushtaq/Todo-Task/blob/main/screens/Folder_Structure_2.png" width="200" height="400" />
+</p>
+
+* screens
+   * add_edit_task
+      * ViewModel
+        * AddEditTodoViewModelTest
+      * FakeNotificationScheduler
+   * task_list
+     * viewmodel
+        * TaskListViewModelTest
+     * DataProvider
+     * FakeDataSourceHandler
+
+
 
 **Reference Material**
 * https://developer.android.com/topic/libraries/architecture/datastore#prefs-vs-proto
