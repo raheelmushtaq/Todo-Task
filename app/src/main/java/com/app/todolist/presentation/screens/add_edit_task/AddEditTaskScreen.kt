@@ -72,7 +72,7 @@ fun AddEditTodoScreen(
             when (event) {
                 is AddEditUIEvent.Error -> {
                     Toast.makeText(
-                        context, context.getString(event.errorId), Toast.LENGTH_LONG
+                        context, context.getString(event.errorId), Toast.LENGTH_SHORT
                     ).show()
                 }
 
