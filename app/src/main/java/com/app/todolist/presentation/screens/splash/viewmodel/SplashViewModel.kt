@@ -65,7 +65,7 @@ class SplashViewModel @Inject constructor(
                     }
 
                     dataStoreHandler.saveCategories(categories.toSet().toList())
-                    dataStoreHandler.saveTask(listOfTasks)
+                    dataStoreHandler.addTasks(listOfTasks)
 
                     for (task in listOfTasks) {
                         notificationScheduler.scheduleNotificationWork(task)

@@ -1,16 +1,14 @@
 package com.app.todolist.presentation.screens.task_list.viewmodel
 
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.app.todolist.datastore.DataStoreHandler
 import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.models.Tasks
-import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
 import com.app.todolist.presentation.screens.DataProvider.categories
 import com.app.todolist.presentation.screens.DataProvider.listOfTasks
 import com.app.todolist.presentation.screens.DataProvider.taskCountOfCategoryOther
 import com.app.todolist.presentation.screens.DataProvider.taskCountOfPriorityHigh
+import com.app.todolist.presentation.screens.FakeDataSourceHandler
+import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
 import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.presentation.utils.filters.TaskPriority
 import com.google.common.truth.Truth
@@ -23,21 +21,17 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class TaskListViewModelTest {
-    private lateinit var dataStoreHandler: DataStoreHandler
+    private lateinit var dataStoreHandler: FakeDataSourceHandler
     private lateinit var viewModel: TaskListViewModel
-    private lateinit var context: Context
-
 
     @Before
     fun setUp() {
 
-        context = ApplicationProvider.getApplicationContext<Context>()
-
-        dataStoreHandler = DataStoreHandler(context)
+        dataStoreHandler = FakeDataSourceHandler()
 
         runBlocking {
             dataStoreHandler.saveCategories(categories)
-            dataStoreHandler.saveTask(listOfTasks)
+            dataStoreHandler.addTasks(listOfTasks)
         }
         viewModel = TaskListViewModel(dataStoreHandler)
     }
@@ -94,12 +88,12 @@ class TaskListViewModelTest {
         delay(2000)
         var setting: AppSettings = viewModel.dataStoreLiveState.value
 
-        val beforeDeleting = setting.tasks.find { item -> item.id == 2 }
-        viewModel.onEvent(TaskListActionEvents.Delete(task = Tasks(id = 2)))
+        val beforeDeleting = setting.tasks.find { item -> item.id == 3 }
+        viewModel.onEvent(TaskListActionEvents.Delete(task = Tasks(id = 3)))
         delay(2000)
         setting = viewModel.dataStoreLiveState.value
 
-        val afterDeleting = setting.tasks.find { item -> item.id == 2 }
+        val afterDeleting = setting.tasks.find { item -> item.id == 3 }
 
         Truth.assertThat(beforeDeleting).isNotEqualTo(null)
         Truth.assertThat(afterDeleting).isEqualTo(null)

@@ -1,7 +1,9 @@
 package com.app.todolist.di
 
+import android.app.Application
 import android.content.Context
 import com.app.todolist.datastore.DataStoreHandler
+import com.app.todolist.datastore.DataStoreHandlerInterface
 import com.app.todolist.network.ApiClient
 import com.app.todolist.notification.NotificationScheduler
 import com.google.gson.Gson
@@ -20,7 +22,14 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideDataStoreHandle(@ApplicationContext context: Context) = DataStoreHandler(context)
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataStoreHandle(@ApplicationContext context: Context): DataStoreHandlerInterface =
+        DataStoreHandler(context)
 
     @Provides
     @Singleton

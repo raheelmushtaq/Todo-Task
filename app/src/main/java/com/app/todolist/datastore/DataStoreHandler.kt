@@ -6,16 +6,19 @@ import androidx.datastore.dataStore
 import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.models.Tasks
 import kotlinx.collections.immutable.mutate
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
 val Context.dataStore: DataStore<AppSettings> by dataStore(
-    fileName = "task_datastore.json",
-    serializer = AppSettingsSerializer()
+    fileName = "task_datastore.json", serializer = AppSettingsSerializer()
 )
 
-class DataStoreHandler(private val context: Context) {
-    fun getAppSettings() = context.dataStore.data
+class DataStoreHandler @Inject constructor(private val context: Context) :
+    DataStoreHandlerInterface {
+    override fun getAppSettings() = context.dataStore.data
 
-    suspend fun saveTask(tasks: List<Tasks>) {
+    override suspend fun addTasks(tasks: List<Tasks>) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(tasks = appSettings.tasks.mutate { list ->
                 list.clear()
@@ -24,7 +27,7 @@ class DataStoreHandler(private val context: Context) {
         }
     }
 
-    suspend fun updateTask(task: Tasks) {
+    override suspend fun updateTask(task: Tasks) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(tasks = appSettings.tasks.mutate { list ->
                 val index = list.indexOfFirst { item -> item.id == task.id }
@@ -33,28 +36,26 @@ class DataStoreHandler(private val context: Context) {
         }
     }
 
-    suspend fun addTask(task: Tasks) {
+    override suspend fun addTask(task: Tasks) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(
                 tasks = appSettings.tasks.mutate { list ->
                     list.add(task)
-                },
-                recordCount = appSettings.recordCount + 1
+                }, recordCount = appSettings.recordCount + 1
             )
         }
     }
 
-    suspend fun deleteTasks(task: Tasks) {
+    override suspend fun deleteTasks(task: Tasks) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(tasks = appSettings.tasks.mutate { list ->
                 val index = list.indexOfFirst { item -> item.id == task.id }
-                if (index != -1)
-                    list.removeAt(index)
+                if (index != -1) list.removeAt(index)
             })
         }
     }
 
-    suspend fun saveCategories(categories: List<String>) {
+    override suspend fun saveCategories(categories: List<String>) {
         context.dataStore.updateData { appSettings ->
             appSettings.copy(categories = appSettings.categories.mutate { list ->
                 list.clear()
@@ -62,6 +63,4 @@ class DataStoreHandler(private val context: Context) {
             })
         }
     }
-
-
 }

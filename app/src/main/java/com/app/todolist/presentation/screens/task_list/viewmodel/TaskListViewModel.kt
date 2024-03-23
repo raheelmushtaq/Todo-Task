@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.todolist.datastore.DataStoreHandler
+import com.app.todolist.datastore.DataStoreHandlerInterface
 import com.app.todolist.datastore.model.AppSettings
 import com.app.todolist.presentation.screens.task_list.state_event.TaskListActionEvents
 import com.app.todolist.presentation.screens.task_list.state_event.TaskListDataState
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataStoreHandler) :
+class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataStoreHandlerInterface) :
     ViewModel() {
     private val _appSettings = mutableStateOf(AppSettings())
 
