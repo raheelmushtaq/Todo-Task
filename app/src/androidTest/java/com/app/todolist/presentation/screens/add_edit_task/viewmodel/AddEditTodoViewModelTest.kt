@@ -67,6 +67,27 @@ class AddEditTodoViewModelTest {
     }
 
     @Test
+    fun saveTaskFail() = runBlocking {
+        delay(500)
+
+        viewModel.saveTask(
+            110,
+            "Hello",
+            "Hello Description",
+            categories.random(),
+            "31-03-2024",
+            null,
+            isCompleted = false,
+            isEditTask = false
+        )
+        delay(1000)
+
+
+        val tasks = viewModel.getTaskById(110)
+        Truth.assertThat(tasks).isEqualTo(null)
+    }
+
+    @Test
     fun updateTask() = runBlocking {
         delay(500)
 
