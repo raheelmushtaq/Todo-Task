@@ -31,6 +31,7 @@
 * DataStore
 * WorkManager
 * <a href="https://developer.android.com/build/migrate-to-catalogs">Gradle version catalogs</a>
+* <a href="https://github.com/maxkeppeler/sheets-compose-dialogs">Compose Calender</a>
 
 **Folder Structure**
 
