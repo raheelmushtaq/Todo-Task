@@ -27,9 +27,9 @@ import javax.inject.Inject
 /*
 * ViewModel: AddEditTodoViewModel
 * this is linked with the AddEditScreen.
-* it takes 3 paramters
+* it takes 3 parameters
 * dataStoreHandler for adding or updating task in datastore
-* notificationSchedular to to schedule a notification for user
+* notificationScheduler to to schedule a notification for user
 * saveStateHandle to get the values from the routes if passed.
 * */
 @HiltViewModel
@@ -41,24 +41,26 @@ class AddEditTodoViewModel @Inject constructor(
 ) : ViewModel() {
 
     // created a mutable state for user with default value,
-    // when user enters a title, then this state is updated with the lates title
+    // when user enters a title, then this state is updated with the latest title
     private var _dataState = mutableStateOf(AddEditDataState())
+
     //this is State variable of the _dataState, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
     val dataState: State<AddEditDataState> = _dataState
 
     // created a shared flow, this is listened in the AddEventTaskScreen, not is saved or an error is generated ten the value is updated in this flow
     private val _addEditUiEvent = MutableSharedFlow<AddEditUIEvent>()
-    // listening is as a shared flow in the activitu
+
+    // listening is as a shared flow in the Compose Screen
     val addEditUiEvent = _addEditUiEvent.asSharedFlow()
 
-    //create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmode, this value is updated
+    //create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmodel, this value is updated
     private val _appSettings = mutableStateOf(AppSettings())
 
     //this is State variable of the _appsettings, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
     val appSettings: MutableState<AppSettings> = _appSettings
 
     // this variable is used to check if the we are editing a task or adding a new task. if it is -1 then it means we are adding a new task but else it is editing
-    // it is not requried in the UI to show to user that why it is not part of the dataState
+    // it is not required in the UI to show to user that why it is not part of the dataState
     private var currentTaskId: Int = -1
 
 
@@ -76,15 +78,15 @@ class AddEditTodoViewModel @Inject constructor(
             if (taskId != -1) {
                 // if the id is not -1, then fetch the task from the _appsettings
                 val task = getTaskById(taskId)
-                //update the UI i.e. _datastate to all the text infomation is shown to user
+                //update the UI i.e. _datastate to all the text information is shown to user
                 updateTaskData(task)
             }
         }
     }
 
     /*
-    * getTaskById this takes task id as input and returns a Tasks classk*/
-    public fun getTaskById(taskId: Int): Tasks? {
+    * getTaskById this takes task id as input and returns a Tasks class*/
+    fun getTaskById(taskId: Int): Tasks? {
         // getting the value from _appsettings, and find the task using filter.
         val filterTasks = _appSettings.value.tasks.toList().filter { task -> task.id == taskId }
         //and check if the value exist then return the first task found else return null
@@ -99,11 +101,11 @@ class AddEditTodoViewModel @Inject constructor(
     private fun updateTaskData(task: Tasks?) {
         //check if task is null
         if (task != null) {
-            // set the curerntTaskId  from the task id
+            // set the currentTaskId  from the task id
             currentTaskId = task.id
 
-            // get the priroty from the task from.
-            // if my any chance the priorotiy value of empty, then a default value Low is used to get the priority
+            // get the priority from the task from.
+            // if my any chance the priority value of empty, then a default value Low is used to get the priority
 
             val priority = arrayListOf(
                 TaskPriority.Low, TaskPriority.Medium, TaskPriority.High
@@ -126,16 +128,16 @@ class AddEditTodoViewModel @Inject constructor(
 
     /*
     * when user perform action on the UI, like pressing the save button , then this function is called.
-    * this funtion takes the AddEditActionEvent as input and does the remaining handling
+    * this function takes the AddEditActionEvent as input and does the remaining handling
     */
     fun onEvent(event: AddEditActionEvent) {
-        //checking which kind of action user whas perform
+        //checking which kind of action user was perform
         when (event) {
             // user has entered title, then update the title in state
             is AddEditActionEvent.EnterTitle -> {
                 _dataState.value = dataState.value.copy(title = event.text)
             }
-            // user has entered description, then update the descrion in state
+            // user has entered description, then update the description in state
             is AddEditActionEvent.EnterDescription -> {
                 _dataState.value = dataState.value.copy(description = event.text)
             }
@@ -145,7 +147,7 @@ class AddEditTodoViewModel @Inject constructor(
                 _dataState.value = dataState.value.copy(taskPriority = event.taskPriority)
             }
 
-            // user has entered Category, then update the Category n the state
+            // user has entered Category, then update the Category on the state
             is AddEditActionEvent.EnterCategory -> {
                 _dataState.value = dataState.value.copy(category = event.value)
             }
@@ -155,12 +157,12 @@ class AddEditTodoViewModel @Inject constructor(
                 _dataState.value = dataState.value.copy(date = event.date)
             }
 
-            // user has pressed Save button, then save task functionality is performd
+            // user has pressed Save button, then save task functionality is performed
             is AddEditActionEvent.SaveTask -> {
 
                 //checking if we are editing the task or adding the task
                 val isEditTask = currentTaskId != -1
-                //from the pervous to values in the datastore, get teh  record count value and pass it as the idea bby makin it unique
+                //from the previous values in the datastore, get the record count value and pass it as the idea by making it unique
                 val id = if (isEditTask) currentTaskId else appSettings.value.recordCount + 1
 
                 // function call to save the task
@@ -179,8 +181,8 @@ class AddEditTodoViewModel @Inject constructor(
     }
 
     /*
-    * Save tasks function is to perform vallidation that a field is not missing and save or udpate Task*/
-    public fun saveTask(
+    * Save tasks function is to perform validation that a field is not missing and save or update Task*/
+    fun saveTask(
         id: Int,
         title: String,
         description: String,
@@ -191,8 +193,7 @@ class AddEditTodoViewModel @Inject constructor(
         isEditTask: Boolean
     ) {
         viewModelScope.launch {
-            //in stead of passing string, stringRes is passed in case of error, so we can see the translation of erro message
-            // applying empty Field Valudation for now
+            //in stead of passing string, stringRes is passed in case of error, so we can see the translation of error message
             var errorId = -1
             if (title.isEmpty()) {
                 errorId = R.string.title_is_required
@@ -209,7 +210,7 @@ class AddEditTodoViewModel @Inject constructor(
             // if error isn not equal to -1, that means a required data is not found or has not been entered by user
             if (errorId != -1) {
                 viewModelScope.launch {
-                    // sending Ui event to _addEditEvent so we can show eror message to the user
+                    // sending Ui event to _addEditEvent so we can show error message to the user
                     _addEditUiEvent.emit(AddEditUIEvent.Error(errorId))
                 }
             } else {
@@ -229,14 +230,14 @@ class AddEditTodoViewModel @Inject constructor(
                     } else {
                         dataStoreHandler.addTask(task)
                     }
-                    // after the task is completed ,start the notification workManger to shownotification
+                    // after the task is completed ,start the notification workManger to show notification
                     notificationScheduler.scheduleNotificationWork(task)
 
                     // if their is n error, update the UI with success
                     _addEditUiEvent.emit(AddEditUIEvent.Success)
 
                 } catch (ex: Exception) {
-//                    if exception is thrown, send the Error eevent
+                    // if exception is thrown, send the Error event
                     ex.printStackTrace()
                     _addEditUiEvent.emit(AddEditUIEvent.Error(R.string.unable_to_save_task))
                 }

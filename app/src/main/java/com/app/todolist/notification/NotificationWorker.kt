@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -33,20 +32,18 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
     private fun showNotification(content: String) {
 //        create a channel it
         val channelId = applicationContext.getString(R.string.task_reminder_channel)
-//        create notificaion id
+//        create notification id
         val notificationId = System.currentTimeMillis()
-//        get nottification Manager form context
+//        get notification Manager form context
         val notificationManager = NotificationManagerCompat.from(applicationContext)
 
-        // create notification channgedl and set it to the notification manager, if OS verison is above oreo
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
+        // create notification channel and set it to the notification manager, if OS version is above oreo
+        val channel = NotificationChannel(
+            channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
 
-        //use notificaton builder to create te notification object.
+        //use notification builder to create te notification object.
         val notification =
             NotificationCompat.Builder(applicationContext, channelId).setContentTitle(
                 applicationContext.getString(

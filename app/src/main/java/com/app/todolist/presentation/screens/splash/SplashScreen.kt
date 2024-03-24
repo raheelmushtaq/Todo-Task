@@ -44,19 +44,19 @@ fun SplashScreen(
     // getting the context
     val context = LocalContext.current
 
-    // fetchin the current value of the data state. when the datastate is update, the ui is recomposed
+    // fetching the current value of the data state. when the datastate is update
     val uiData = viewModel.dataState.value
 
 
-    // ath the first launch of the applicatioon
+    // ath the first launch of the application
     LaunchedEffect(key1 = "true", block = {
 
-        //checking if the permission is granter or not if not gradnted then requesting permission to be shown to user
+        //checking if the permission is granter or not if not granted then requesting permission to be shown to user
         runWithNotificationPermissionCheck(context) {
             // getting tasks from viewmodel
             viewModel.fetchTasks()
         }
-        // here we are listeneing to any action which is fone for user to see from viewmodel i.e. success of fetchin tasks and ccategory or error for network failure
+        // here we are listening to any action which is for user to see from viewmodel i.e. success of fetching tasks and category or error for network failure
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
                 // if event is success
@@ -69,9 +69,9 @@ fun SplashScreen(
                         }
                     }
                 }
-                // if event error is occured
+                // if event error is occurred
                 is SplashUIEvent.Error -> {
-//                    show toast to user in case of data is not fetche
+//                    show toast to user in case of data is not fetched
                     Toast.makeText(
                         context, context.getString(event.message), Toast.LENGTH_LONG
                     ).show()
@@ -119,7 +119,7 @@ fun SplashScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // incase of loadig show loader
+                // in case of loading show loader
                 if (uiData.isLoading) {
                     Spacer(modifier = Modifier.height(32.dp))
                     CircularProgressIndicator(
@@ -130,7 +130,7 @@ fun SplashScreen(
                     Spacer(modifier = Modifier.height(32.dp))
                 }
                 if (uiData.isError) {
-                    // incase of Error shiow diwload  show loader
+                    // in case of Error show Retry Button and hide Loader  show loader
 
                     Button(onClick = { viewModel.fetchTasks() }) {
                         Text(text = stringResource(id = R.string.retry))

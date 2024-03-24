@@ -5,7 +5,7 @@ import com.app.todolist.presentation.models.Tasks
 import retrofit2.http.GET
 
 /*
-* This class is uses with Di  to impelemnt the Api calling for fetching the tasks at the start.*/
+* This class is uses with Di to implement the Api calling for fetching the tasks at the start.*/
 
 interface ApiClient {
 

@@ -24,22 +24,22 @@ import javax.inject.Inject
 /*
 * ViewModel: AddEditTodoViewModel
 * this is linked with the AddEditScreen.
-* it takes 1 paramters
+* it takes 1 parameters
 * dataStoreHandler for adding or updating task in datastore
 * */
 @HiltViewModel
 class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataStoreHandlerInterface) :
     ViewModel() {
-    // create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmode, this value is updated
+    // create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmodel, this value is updated
     // here it is only listening the the data state.
     private val _appSettings = mutableStateOf(AppSettings())
 
     // created a mutable state for user with default value,
-    // when user enters a title, then this state is updated with the lates title
+    // when user enters a title, then this state is updated with the latest title
     private val _dataState = mutableStateOf(TaskListDataState())
     //this is State variable of the _dataState, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
     val dataState: State<TaskListDataState> = _dataState
-    //create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmode, this value is updated
+    //create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmodel, this value is updated
 
     private val _dataStoreLiveState = mutableStateOf(AppSettings())
     //this is State variable of the _appsettings, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
@@ -58,15 +58,15 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
     }
 
     /*
-    * fetching the task based on the search or iflter*/
+    * fetching the task based on the search or filter*/
     private fun getTasks(searchText: String = "", taskFilters: TaskFilters = TaskFilters()) {
         viewModelScope.launch {
             var tasks =
                 if (searchText.isEmpty()) {
-//            if search is empty the use all the tasks for applying fikter
+//            if search is empty the use all the tasks for applying filter
                     _appSettings.value.tasks.toList()
                 } else {
-                    // if search is not empty then check check tiel or description contains the searched text
+                    // if search is not empty then check check title or description contains the searched text
                     _appSettings.value.tasks.toList().filter { task ->
                         task.title.lowercase().contains(searchText) || task.description.lowercase()
                             .contains(searchText)
@@ -91,14 +91,14 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
 //            apply sorting based on sort by
             tasks = when (taskFilters.sortBy) {
                 is SortBy.Ascending -> {
-                    // Ascending sort, then sort them by the orderby field
+                    // Ascending sort, then sort them by the order by field
                     when (taskFilters.orderBy) {
                         is OrderBy.Title -> tasks.sortedBy { it.title.lowercase() }
                         is OrderBy.Date -> tasks.sortedBy { it.date }
                         is OrderBy.Completed -> tasks.sortedBy { it.isCompleted }
                     }
                 }
-                    // Descending sort, then sort them by the orderby field
+                    // Descending sort, then sort them by the order by field
                 is SortBy.Descending -> {
                     when (taskFilters.orderBy) {
                         is OrderBy.Title -> tasks.sortedByDescending { it.title.lowercase() }
@@ -122,17 +122,17 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
 
     /*
       * when user perform action on the UI, like pressing the save button , then this function is called.
-      * this funtion takes the TaskListActionEvents as input and does the remaining handling
+      * this function takes the TaskListActionEvents as input and does the remaining handling
       */
     fun onEvent(event: TaskListActionEvents) {
-        //checking which kind of action user whas perform
+        //checking which kind of action user has perform
         when (event) {
-            // whe Apply filter is pressed, the getTasks from the datastore using the selected fitler and search Text
+            // whe Apply filter is pressed, the getTasks from the datastore using the selected filter and search Text
             is TaskListActionEvents.ApplyFilter -> {
                 getTasks(dataState.value.searchText, event.taskFilters)
             }
 
-            // whe search has been entered , the getTasks from the datastore usin that seach and filter
+            // whe search has been entered , the getTasks from the datastore using that Search and filter
             is TaskListActionEvents.Search -> {
                 _dataState.value = dataState.value.copy(searchText = event.searchText)
                 DebounceSearchUtils.setSearchTextChange {
@@ -155,7 +155,7 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                 }
             }
 
-            // whe mark as complete button si pressed,  then update the tasks from datastore
+            // whe mark as complete button is pressed,  then update the tasks from datastore
             is TaskListActionEvents.MarkAsComplete -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     val task = event.task.copy(isCompleted = true)

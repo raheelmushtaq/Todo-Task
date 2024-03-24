@@ -2,7 +2,6 @@ package com.app.todolist.presentation.components.edittext
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,17 +19,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.todolist.R
+
 /*
 * AppEditText is composable which is used in the the application.this component is based on InputField.
-* this compoent take different option to show a InputField
+* this component take different option to show a InputField
 *  textFieldValue to be, which is the value we have saved on when user types the text
 * hint is used to show the placeholder in case if their is no textFieldValue
-* onValueChnge callback is used when user has listen the change on text field i.e. when user is typg. t
-* read only is to show that this valye is only for read and it cannot be editble
-* onDone callback is calledcalled when user presses the search or done button on the keyvoard
+* onValueChange callback is used when user has listen the change on text field i.e. when user is typing. t
+* read only is to show that this value is only for read and it cannot be editable
+* onDone callback is called when user presses the search or done button on the keyboard
 * */
 @Composable
 fun AppEditTextField(
@@ -61,12 +60,12 @@ fun AppEditTextField(
 
 /*
 * AppDescriptionTextField is composable which is used in the the application.this component is based on InputField.
-* this compoent take different option to show a InputField
+* this component take different option to show a InputField
 *  textFieldValue to be, which is the value we have saved on when user types the text
 * hint is used to show the placeholder in case if their is no textFieldValue
-* onValueChnge callback is used when user has listen the change on text field i.e. when user is typg. t
-* read only is to show that this valye is only for read and it cannot be editble
-* onDone callback is calledcalled when user presses the search or done button on the keyvoard
+* onValueChange callback is used when user has listen the change on text field i.e. when user is typing. t
+* read only is to show that this value is only for read and it cannot be editable
+* onDone callback is called when user presses the search or done button on the keyboard
 * */
 @Composable
 fun AppDescriptionTextField(
@@ -96,12 +95,12 @@ fun AppDescriptionTextField(
 }
 /*
 * SearchEditTextField is composable which is used in the the application.this component is based on search bar.
-* this compoent take different option to show a InputField
+* this component take different option to show a InputField
 *  textFieldValue to be, which is the value we have saved on when user types the text
 * hint is used to show the placeholder in case if their is no textFieldValue
-* onValueChnge callback is used when user has listen the change on text field i.e. when user is typg. t
-* onDone callback is calledcalled when user presses the search or done button on the keyvoard
-* showFilterIcon is used to show filteIcon on the right side if it is true,
+* onValueChange callback is used when user has listen the change on text field i.e. when user is typing. t
+* onDone callback is called-called when user presses the search or done button on the keyboard
+* showFilterIcon is used to show filterIcon on the right side if it is true,
 * onFilterIconPressed is called when the filter icon is pressed.
 * */
 @Composable
@@ -119,7 +118,7 @@ fun SearchEditTextField(
         label = { Text(text = hint) },
         singleLine = true,
         leadingIcon = {
-            // leadingIcn is the left icon of the TextField.
+            // leadingIcon is the left icon of the TextField.
             Image(
                 modifier = Modifier
                     .width(30.dp)
@@ -157,7 +156,7 @@ fun SearchEditTextField(
                         )
                     }
 
-                    // if showFIlterIcon is tru then show the filter icon
+                    // if showFilterIcon is tru then show the filter icon
 
                     if (showFilterIcon) {
                         Image(modifier = Modifier

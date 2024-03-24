@@ -10,12 +10,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 
-// All the components in this clas are the used to thow text orf differenct sizes
-// these classes are used here to show a generic and fixed font size that is displayed in the whole application/
+// All the components in this class are the used to showing text of different sizes
+// these classes are used here to show a generic and fixed font size that is displayed in the whole application
 
 /*SmallText is used to show  text with  font size 13
 * it takes text as input to show
-* and color to set color of the text, by default itis black.
+* and color to set color of the text, by default its black.
 * font weight to show font bold or normal
 * max Lines this Text will have. */
 @Composable
@@ -34,14 +34,15 @@ fun SmallText(
         fontWeight = fontWeight,
         fontFamily = FontFamily.SansSerif,
         modifier = modifier,
-        maxLines = maxLines
+        maxLines = maxLines,
+        textAlign = align
     )
 }
 
 
 /*RegularText is used to show  text with  font size 15
 * it takes text as input to show
-* and color to set color of the text, by default itis black.
+* and color to set color of the text, by default its black.
 * font weight to show font bold or normal
 * max Lines this Text will have. */
 @Composable
@@ -68,7 +69,7 @@ fun RegularText(
 
 /*MediumText is used to show  text with  font size 17
 * it takes text as input to show
-* and color to set color of the text, by default itis black.
+* and color to set color of the text, by default its black.
 * font weight to show font bold or normal
 * max Lines this Text will have. */
 @Composable
@@ -95,7 +96,7 @@ fun MediumText(
 
 /*LargeText is used to show  text with  font size 19
 * it takes text as input to show
-* and color to set color of the text, by default itis black.
+* and color to set color of the text, by default its black.
 * font weight to show font bold or normal
 * max Lines this Text will have. */
 @Composable
@@ -123,7 +124,7 @@ fun LargeText(
 
 /*HeadingText is used to show  text with  font size 24
 * it takes text as input to show
-* and color to set color of the text, by default itis black.
+* and color to set color of the text, by default its black.
 * font weight to show font bold or normal
 * max Lines this Text will have. */
 @Composable

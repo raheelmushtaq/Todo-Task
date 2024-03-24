@@ -38,10 +38,10 @@ import com.app.todolist.presentation.utils.filters.TaskPriority
 
 /*
 * FilterBottomSheet is used to show filter Dialog for the user.
-* it takes following paramters
+* it takes following parameters
 * heading to show on the header
-* dialogstate for visbility state
-* selectedTasksFilter for showing if filter was already applied, then showing these values when filter openns
+* dialog-state for visibility of the dialog
+* selectedTasksFilter for showing if filter was already applied, then showing these values when filter is visible to user
 * applyFilter a callback function when user presses the apply button. it takes the TaskFilters object as a parameter
 * onDismiss function is called when user either drags the bottom sheet down, or user presses outside of the dialog
 * categories to show to the user.
@@ -57,7 +57,7 @@ fun FilterBottomSheet(
 ) {
 
 
-    //base bottomsheet dialog
+    //base bottom-sheet dialog
     BottomSheetDialog(
         dialogState = dialogState,
         modifier = Modifier.height(530.dp),
@@ -77,7 +77,7 @@ fun FilterBottomSheet(
 /*
 * FilterView is to  show filter view inside the bottom sheet dialog.
 * it take
-* defautlt/previous selected filter
+* default/previous selected filter
 * categories
 * and apply button
 * */
@@ -115,7 +115,7 @@ fun FilterView(
     }
 
     // this function will be called every time when the state of the selectedTaskFilter changes
-    //this function will set the selected Filer properites to its respected data states
+    //this function will set the selected Filer properties to its respected data states
     LaunchedEffect(key1 = selectedTaskFilters) {
         selectedPriority.value = selectedTaskFilters.taskPriority
         selectedOrderBy.value = selectedTaskFilters.orderBy
@@ -131,7 +131,7 @@ fun FilterView(
             .background(Color.White)
     ) {
 
-        // Proirity view to show to user.
+        // Priority view to be shown to user.
         // it will return the selected state when user changes Priority like Selecting High or Selected Low
         PriorityView(defaultPriority = selectedPriority.value) {
             selectedPriority.value = it
@@ -174,7 +174,7 @@ fun FilterView(
                 isDisabled = false,
                 onClick = {
                     // when user presses clear button, then remove all teh filter,
-                    // and set the default value for orderby, and sortBy,
+                    // and set the default value for order by, and sortBy,
                     // and call the function to close the dialog and show All the Tasks
                     selectedCategory.value = null
                     selectedOrderBy.value = OrderBy.Date
@@ -199,12 +199,12 @@ fun FilterView(
 
 /*
 * Priority view is used to show section button with 3 different options from the TaskPriority class.
-* low, mediu, and high
-* the paramters for this composable are
-* defaultPriority is the selected Priority, by default it is null, but if user has already applied the filtert
+* low, medium, and high
+* the parameters for this composable are
+* defaultPriority is the selected Priority, by default it is null, but if user has already applied the filter
 * then this will show the selected value
-* showOnlySelected is used to in case of the completed Tasks, i,e, if the task is already completed abd thnen we do not need to show user theoptoion to perfor selection
-* onSelect callback with Taskpriotiry will pass the selected value the composeable to save for applying filter*/
+* showOnlySelected is used to in case of the completed Tasks, i,e, if the task is already completed  then we do not need to show user these option to perform selection
+* onSelect callback with Task priority will pass the selected value to save for applying filter*/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriorityView(
@@ -223,7 +223,7 @@ fun PriorityView(
     LaunchedEffect(key1 = defaultPriority) {
         selectedPriority.value = defaultPriority
     }
-    // showing the heading of Priorty
+    // showing the heading of Priority
     MediumText(text = stringResource(id = R.string.priority), fontWeight = FontWeight.Bold)
 
     Spacer(modifier = Modifier.height(5.dp))
@@ -236,9 +236,9 @@ fun PriorityView(
             isClickable = false
         )
     } else {
-        //if not completed then show the segmented button with single selectble option
+        //if not completed then show the segmented button with single selectable option
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            // loop through all the list of Prioroty and add the segmented button
+            // loop through all the list of Priority and add the segmented button
             taskPriorityArrayLists.forEachIndexed { index, priority ->
                 SegmentedButton(
                     shape = SegmentedButtonDefaults.itemShape(
@@ -249,12 +249,12 @@ fun PriorityView(
                         activeContainerColor = Color.White,
                         inactiveContainerColor = Color.White,
                     ), onClick = {
-                        // when user person the segment button, check if the selected valye is not same then select the value
+                        // when user person the segment button, check if the selected value is not same then select the value
                         if (selectedPriority.value != priority) {
                             selectedPriority.value = priority
                             onSelect(selectedPriority.value)
                         }
-                    }, selected = selectedPriority.value == priority // show tick icon for the selected valie
+                    }, selected = selectedPriority.value == priority // show tick icon for the selected value
                 ) {
                     // title of the priority
                     MediumText(text = stringResource(id = priority.resId))
@@ -265,9 +265,9 @@ fun PriorityView(
 
 }
 
-/*Sortby view is used to show two types of options, Asending or Descending
-* this composable take 2 paramter,
-* selecteSortby, which is the defaul value
+/*Sort by view is used to show two types of options, Ascending or Descending
+* this composable take 2 parameter,
+* selected Sort by, which is the default value
 * onSelect a callback function it is called when user changes te sort by*/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -286,7 +286,7 @@ fun SortByView(defaultValue: SortBy, onSelect: (SortBy) -> Unit) {
     MediumText(text = stringResource(id = R.string.sort_by), fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(5.dp))
 
-    //show the segmented button with single selectble option
+    //show the segmented button with single selectable option
 
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         sortByList.forEachIndexed { index, sortBy ->
@@ -298,14 +298,14 @@ fun SortByView(defaultValue: SortBy, onSelect: (SortBy) -> Unit) {
                     activeContainerColor = Color.White,
                     inactiveContainerColor = Color.White,
                 ), onClick = {
-                    // when user person the segment button, check if the selected valye is not same then select the value
+                    // when user person the segment button, check if the selected value is not same then select the value
                     if (selectedSortBy.value != sortBy) {
                         selectedSortBy.value = sortBy
                         onSelect(sortBy)
                     }
                 }, selected = selectedSortBy.value == sortBy // show tick icon for the selected value
             ) {
-                // title of the sortyby
+                // title of the sort by
                 MediumText(text = stringResource(id = sortBy.resId))
             }
         }
@@ -313,9 +313,9 @@ fun SortByView(defaultValue: SortBy, onSelect: (SortBy) -> Unit) {
 
 }
 /*OrderBy view is used to show 3 different options from OrderBy class
-* this composable take 2 paramter,
-* defalutValue, which is the or selected value fo the filter
-* onSelect a callback function it is called when user changes te OrdeBy by*/
+* this composable take 2 parameter,
+* defaultValue, which is the or selected value fo the filter
+* onSelect a callback function it is called when user changes te OrderBy by*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -334,7 +334,7 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
     MediumText(text = stringResource(id = R.string.order_by), fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(5.dp))
 
-    //show the segmented button with single selectble option
+    //show the segmented button with single selectable option
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         orderByList.forEachIndexed { index, orderBy ->
             SegmentedButton(
@@ -345,7 +345,7 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
                     activeContainerColor = Color.White,
                     inactiveContainerColor = Color.White,
                 ), onClick = {
-                    // when user person the segment button, check if the selected valye is not same then select the value
+                    // when user person the segment button, check if the selected value is not same then select the value
                     if (selectedOrderBy.value != orderBy) {
                         selectedOrderBy.value = orderBy
                         onSelect(orderBy)
@@ -353,7 +353,7 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
 
                 }, selected = selectedOrderBy.value == orderBy// show tick icon for the selected value
             ) {
-                // title of the orderby
+                // title of the OrderBy
                 MediumText(text = stringResource(id = orderBy.keyRes))
             }
         }
@@ -363,7 +363,7 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
 
 /*Categories filter view is used to show list of filters
 * this composable take 4 parameter,
-* defalutValue, which is the or selected value fo the category
+* defaultValue, which is the or selected value fo the category
 * categories which is the list of categories which we have saved
 * readOnly is used for the cases if we want to only who value and it is not clickable
 * onSelect a callback function it is called when user changes te category by*/
@@ -387,20 +387,20 @@ fun CategoriesFilterView(
     Spacer(modifier = Modifier.height(10.dp))
 
 
-    //show the list of Category view button with single selectble option
+    //show the list of Category view button with single selectable option
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(categories.size) { index ->
             val category = categories[index]
-                //using the compoenent to show the  category view.
+                //using the component to show the  category view.
             CategoryView(
                 text = category,
                 isClickable = !readOnly,
                 showIcon = selectedCategory.value.equals(category)
             ) {
-                // when user a category, then this callback function is called which saved the defualt value
+                // when user a category, then this callback function is called which saved the default value
                 selectedCategory.value = category
                 onSelect(category)
             }

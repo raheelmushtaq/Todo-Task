@@ -23,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,10 +31,10 @@ import com.app.todolist.presentation.utils.screens.ScreenRoutes
 
 /*
 * AppHeader is the header composable which is used for app header.
-* It take different paramters that needs to be shown in the header
+* It take different parameters that needs to be shown in the header
 * title for header title
-* navcontroller for handling any navigation action
-* showBackButton, to be shown if we want to add the navigation functioanality
+* nav controller for handling any navigation action
+* showBackButton, to be shown if we want to add the navigation functionality
 * showSettingsIcon, for showing settings icon on the right side.
 * Some Modifier for showing handling the UI
 * */
@@ -58,7 +57,7 @@ fun AppHeader(
         // a column composable to show views vertically
         Column(modifier = Modifier.fillMaxWidth()) {
 
-            // a row composeable to show view horizontally
+            // a row composable to show view horizontally
             Row(
                 modifier = modifier
                     .padding(20.dp)
@@ -68,7 +67,7 @@ fun AppHeader(
 
                 // show back button if this is true else add a little margin
                 if (showBackButton) {
-                    // Back btton
+                    // Back button
                     Image(
                         painter = painterResource(id = R.drawable.ic_arrow_right),
                         modifier = Modifier
@@ -84,10 +83,8 @@ fun AppHeader(
                             id = R.string.back
                         ),
                     )
-                    // add a genaring space with the title
                     Spacer(modifier = Modifier.width(10.dp))
                 } else {
-                    // show a little space from left
                     Spacer(
                         modifier = Modifier
                             .width(20.dp)
@@ -123,7 +120,7 @@ fun AppHeader(
             }
             // add space of 5 height
             Spacer(modifier = Modifier.width(5.dp))
-            //show a horizontab bar with height of 1dp
+            //show a horizontal bar with height of 1dp
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -132,10 +129,4 @@ fun AppHeader(
             )
         }
     }
-}
-
-@Preview
-@Composable
-
-fun HeaderPreview() {
 }

@@ -18,20 +18,20 @@ class NotificationScheduler @Inject constructor(private val context: Context) :
     NotificationSchedulerInterface {
 
     /*
-    * this function is called when user want to create notiifcation*/
+    * this function is called when user want to create notification*/
     override fun scheduleNotificationWork(tasks: Tasks) {
         // get the time from task date
         val time = calculateDelay(tasks.date)
 //        check if the task is of on old date then don't show it to user
         if (time > 0) {
-            //create OneTimeWorkRequest to create notification by pass the title of the not to be showin the notification.
+            //create OneTimeWorkRequest to create notification by pass the title of the task to be shown in the notification.
 //            it should run after the calculated time
             val notificationWorkRequest = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
                 .setInputData(workDataOf("content" to tasks.title))
                 .setInitialDelay(time, TimeUnit.MILLISECONDS).build()
 
             // enqueue Unique work with the task id, because if use edits the tasks and the for the precious work a notifications is already scheduled,
-            // then cancel it and add new notificaition
+            // then cancel it and add new notification
             WorkManager.getInstance(context).enqueueUniqueWork(
                 "notification_${tasks.id}", ExistingWorkPolicy.REPLACE, notificationWorkRequest
             )

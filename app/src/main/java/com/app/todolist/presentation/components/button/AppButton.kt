@@ -17,11 +17,11 @@ import com.app.todolist.R
 
 /*
 * AppButton is composable which is used in the the application.this component is based on Button.
-* this compoent take different option to show a button
+* this component take different option to show a button
 * modifier for adjusting the UI of button
 * buttonText for show text on button
 * isSecondary for show secondary button secondary button i.e. secondary and primary button design, color SCHEME are different rest functionality is same
-* isDisabked is used for showing a disabled button
+* isDisabled is used for showing a disabled button
 * */
 @Composable
 fun AppButton(
@@ -32,7 +32,7 @@ fun AppButton(
     onClick: () -> Unit = {}
 ) {
 
-    // Add Buton the compose
+    // Add Button the compose
     // setting up the colorscheme for secondary and primary
     Button(
         modifier = modifier.fillMaxWidth(),
@@ -43,7 +43,7 @@ fun AppButton(
         enabled = !isDisabled,
         onClick = onClick
     ) {
-        //show Ttle f the button
+        //show Title of the button
         MediumText(
             text = stringResource(id = buttonText),
             color = if (!isDisabled) Color.White else Color.Black,

@@ -6,7 +6,7 @@ import com.app.todolist.R
 
 
 /*
-* this sealed class is used for performing Filter operation of Prioroty By. when Filter Priority is applaied, then we are shogin only Proptiry Based Task.
+* this sealed class is used for performing Filter operation of Priority By. when Filter Priority is applied, then we are showing only Priority Based Task.
 * */
 sealed class TaskPriority(val value: String, @StringRes val resId: Int) {
     data object Low : TaskPriority("Low", R.string.low)

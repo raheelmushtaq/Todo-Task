@@ -52,7 +52,7 @@ fun SettingsScreen(
         R.string.ar to "ar-AE",
     ).mapKeys { stringResource(it.key) }
 
-// this function is used to handle the locale change of the appl.
+// this function is used to handle the locale change of the app.
     fun handleChangeLocation(selectionLocale: String) {
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(
@@ -74,7 +74,7 @@ fun SettingsScreen(
         )
 
     }) { defaultPadding ->
-        //create the base coluymn with the padding provided by scaffold
+        //create the base column with the padding provided by scaffold
         Column(modifier = Modifier.padding(defaultPadding)) {
 // show parent box
             Box(
@@ -99,7 +99,7 @@ fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.height(5.dp))
 
-                    // maintaing the state of the DropDown menu
+                    // maintaining the state of the DropDown menu
                     var expanded by remember { mutableStateOf(false) }
 
                     // added a dropdown box for user
@@ -107,12 +107,12 @@ fun SettingsScreen(
                         modifier = Modifier.weight(1f),
                         expanded = expanded,
                         onExpandedChange = {
-                            // handling the state of DeropDown
+                            // handling the state of DropDown
                             expanded = !expanded
                         }
                     ) {
-                        //ceate a text field which is read only
-                        //by adding a menuAcnor as a modifier, we are allowing it to show dropdown
+                        //create a text field which is read only
+                        //by adding a menuAnchor as a modifier, we are allowing it to show dropdown
                         TextField(
                             readOnly = true,
                             value = stringResource(R.string.selected_language),
@@ -127,7 +127,7 @@ fun SettingsScreen(
                             },
                             colors = ExposedDropdownMenuDefaults.textFieldColors()
                         )
-                        // Drop Down meny
+                        // Drop Down men
                         ExposedDropdownMenu(
                             expanded = expanded,
                             onDismissRequest = {

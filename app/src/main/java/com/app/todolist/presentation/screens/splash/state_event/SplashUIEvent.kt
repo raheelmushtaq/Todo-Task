@@ -8,6 +8,6 @@ package com.app.todolist.presentation.screens.splash.state_event
 sealed class SplashUIEvent {
     //success event is data is fetched from api
     data object Success : SplashUIEvent()
-    //for howing error message if case data is not fethced from api
+    //for showing error message if case data is not fetched from api
     data class Error(val message: Int) : SplashUIEvent()
 }

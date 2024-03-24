@@ -37,7 +37,7 @@ fun TaskItemCard(
     onDelete: (item: Tasks) -> Unit,
     onMarkAsComplete: (item: Tasks) -> Unit,
 ) {
-    // defining the color for the priorrity bases, which ishown on the right side top of task item.
+    // defining the color for the priority bases, which is shown on the right side top of task item.
     val priorityColor = if (item.priority.equals(
             TaskPriority.High.value,
             true
@@ -98,7 +98,7 @@ fun TaskItemCard(
                 }
 
 
-                //showing the action buttnn mark Complete or Completed
+                //showing the action button mark Complete or Completed
                 Row(
                     modifier = Modifier
                         .background(
@@ -113,7 +113,7 @@ fun TaskItemCard(
                         }, verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    // checking if task is not completed then simpley added a taxt
+                    // checking if task is not completed then simple added a text
                     if (!item.isCompleted) {
                         RegularText(
                             text = stringResource(id = R.string.mark_as_complete),
@@ -122,7 +122,7 @@ fun TaskItemCard(
 
                     } else {
                         // if task is completed then adding a check icon with the text
-                        // shwing check icon
+                        // showing check icon
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = null,
@@ -153,7 +153,7 @@ fun TaskItemCard(
 
 
                 ) {
-                    // deltee text
+                    // delete text
                     RegularText(
                         text = stringResource(id = R.string.delete),
                         color = Color.White

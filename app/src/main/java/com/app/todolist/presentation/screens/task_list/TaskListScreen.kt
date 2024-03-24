@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -46,9 +45,9 @@ fun TodoListScreen(
     navController: NavController,
     viewModel: TaskListViewModel = hiltViewModel(),
 ) {
-    // fetchin the current value of the data state. when the datastate is update
+    // fetching the current value of the data state. when the datastate is update
     val state = viewModel.dataState.value
-    //fetchin the current value of the app datastore. when the task is filtered, or deleted or mark as completed the for
+    //fetching the current value of the app datastore. when the task is filtered, or deleted or mark as completed the for
     val appSettings = viewModel.dataStoreLiveState.value
 
     //using focus manager here to clear focus
@@ -84,7 +83,7 @@ fun TodoListScreen(
             }
         },
     ) { defaultPadding ->
-        //create the base coluymn with the padding provided by scaffold
+        //create the base column with the padding provided by scaffold
         Column(modifier = Modifier.padding(defaultPadding)) {
 
             Box(
@@ -98,10 +97,10 @@ fun TodoListScreen(
                 if (state.isLoading) {
                     Loader(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    // ading a column to show composable
+                    // adding a column to show composable
                     Column {
 
-                        // adding a Search field for taking search to peform text
+                        // adding a Search field for taking text to perform search
                         SearchEditTextField(
                             textFieldValue = state.searchText,
                             hint = stringResource(id = R.string.Filter),
@@ -130,7 +129,7 @@ fun TodoListScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 items(appSettings.tasks, key = { it.id }) { item ->
-//                                    adding a tasklistItem with tasks as paramter
+//                                    adding a task-listItem with tasks as parameter
                                     TaskItemCard(
                                         item = item,
                                         onDelete = {
@@ -150,7 +149,7 @@ fun TodoListScreen(
                                         },
                                         onClick = {
                                             focusManager.clearFocus()
-                                            // on click on the View, take to to the edit sceen
+                                            // on click on the View, take to to the edit screen
                                             navController.navigate(
                                                 ScreenRoutes.AddEditTaskScreen.route +
                                                         "?${TASK_ID}=${item.id}"
@@ -181,17 +180,17 @@ fun TodoListScreen(
                             }
                         }
 
-                        // if the show filtering is true then show the fitlerBottom Sheet
+                        // if the show filtering is true then show the filterBottomSheet
                         if (state.showFilterDialog) {
                             FilterBottomSheet(
                                 heading = "Filter",
                                 dialogState = state.showFilterDialog,
                                 selectedTaskFilters = state.taskFilters,
                                 applyFilter = {
-                                    // when user presses Aply button this event to the viewmodel
+                                    // when user presses apply button this event to the viewmodel
                                     viewModel.onEvent(TaskListActionEvents.ApplyFilter(it))
                                 }, onDismiss = {
-                                    // when dialog auto dismisses on drag on tap outise tehn  this event to the viewmodel
+                                    // when dialog auto dismisses on drag on tap Outside then  this event to the viewmodel
                                     viewModel.onEvent(TaskListActionEvents.HideFilter)
                                 },
                                 categories = appSettings.categories

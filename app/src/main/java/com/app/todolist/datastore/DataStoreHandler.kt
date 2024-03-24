@@ -11,7 +11,7 @@ import javax.inject.Inject
 /*
 * this is the creation of the datastore.
 * this extension functions uses the filename, and the serializer we have created to create the datastore
-* whicis then is used with the context
+* which is then is used with the context
  */
 val Context.dataStore: DataStore<AppSettings> by dataStore(
     fileName = "task_datastore.json", serializer = AppSettingsSerializer()

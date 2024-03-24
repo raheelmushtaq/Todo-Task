@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 //Loader class is used to show loader.
 @Composable
 fun Loader(modifier: Modifier = Modifier) {
-    // CircularProgressIndicator is the loader which is used in the spalch sceem
+    // CircularProgressIndicator is the loader which is used in the Splash Screen
     CircularProgressIndicator(
         color = Color.Black, modifier = modifier
     )

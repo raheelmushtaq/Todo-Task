@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import com.app.todolist.presentation.components.textfields.MediumText
 
 /*
-* CateoforyView composable is used to show the cateories. it is also used to show a single value
-* this cmomposeable takes following paramter
-* text to be shown for categpry
-* isCLickable, if it is set to true, then the category view is clickable and if it is false, them category view is not clickable
+* CategoryView composable is used to show the categories. it is also used to show a single value
+* this composable takes following parameter
+* text to be shown for category
+* isClickable, if it is set to true, then the category view is clickable and if it is false, them category view is not clickable
 * onClick the callback function, when user presses some tasks, then this function is called.*/
 @Composable
 fun CategoryView(
@@ -54,7 +54,7 @@ fun CategoryView(
             Spacer(modifier = Modifier.width(10.dp))
 
         }
-        //show category titele
+        //show category title
         MediumText(text = text)
     }
 }

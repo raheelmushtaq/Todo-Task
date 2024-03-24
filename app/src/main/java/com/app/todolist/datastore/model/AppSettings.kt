@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 
 /**
- * #AppSettings is the class which is used with data store.
+ * AppSettings is the class which is used with data store.
  * DataStore uses this class to save the data to save the list of tasks, categories and record count
  ***/
 @Serializable
