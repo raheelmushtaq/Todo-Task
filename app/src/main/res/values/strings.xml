@@ -58,5 +58,6 @@
     <string name="ok">Ok</string>
     <string name="task_reminder_channel" translatable="false">task_reminder_channel</string>
     <string name="reminder">Reminder</string>
+    <string name="notification">Notification</string>
 
 </resources>

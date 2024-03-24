@@ -36,7 +36,7 @@ class AddEditTodoViewModelTest {
         notificationScheduler = FakeNotificationScheduler()
 
         runBlocking {
-            dataStoreHandler.saveCategories(DataProvider.categories)
+            dataStoreHandler.saveCategories(categories)
             dataStoreHandler.addTasks(DataProvider.listOfTasks)
         }
         viewModel =

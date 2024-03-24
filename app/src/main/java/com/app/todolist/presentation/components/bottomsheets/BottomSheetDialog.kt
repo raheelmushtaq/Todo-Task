@@ -20,6 +20,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.app.todolist.presentation.components.textfields.LargeText
 
+/*
+* BottomSheetDialog is the Base composable when we have to show Bottom Sheet dialog.
+* this class will the main handling for showing the bottom sheet.
+* It take different parameters for handling
+* heading to show in the bottom sheet
+* dialogState notifying whether the dialog is visible or not.
+* onDismiss function, when the dialog is dismissed
+* content to show in the bottom sheet/
+* Some Modifier for showing handling the UI
+* */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetDialog(
@@ -29,12 +39,16 @@ fun BottomSheetDialog(
     onDismiss: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    //rememberModalBottomSheetState notifies the current state of the bottom Sheet.
     val sheetState = rememberModalBottomSheetState(
+        // skipPartiallyExpanded if it set to false, then bottom sheet partial screen of the content will be visible.
         skipPartiallyExpanded = true
     )
 
+    // show dialog if the dialog state is true
     if (dialogState) {
 
+        // Modal Bottom sheet Composable to show the bottom sheet
         ModalBottomSheet(
             modifier = modifier,
             onDismissRequest = { onDismiss() },
@@ -56,6 +70,7 @@ fun BottomSheetDialog(
             windowInsets = WindowInsets.ime,
             dragHandle = {}
         ) {
+            // showing the header view for the bottom sheet.
             Box {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

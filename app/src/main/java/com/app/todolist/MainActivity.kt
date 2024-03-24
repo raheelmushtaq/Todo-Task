@@ -35,21 +35,27 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             TodoListTheme {
+                // Creates a NavHostController that handles the adding of the ComposeNavigator and DialogNavigator.
                 val navController = rememberNavController()
+
                 NavHost(
                     modifier = Modifier
                         .statusBarsPadding()
                         .background(Color.White),
                     navController = navController,
-                    startDestination = ScreenRoutes.SplashScreen.route
+                    startDestination = ScreenRoutes.SplashScreen.route // setting the spash screen as first destination
                 ) {
+                    // adding SplashScreen as Composable
                     composable(route = ScreenRoutes.SplashScreen.route) {
                         SplashScreen(navController = navController)
                     }
+                    // adding TaskListScreen as Composable
 
                     composable(route = ScreenRoutes.TaskListScreen.route) {
                         TodoListScreen(navController = navController)
                     }
+                    // adding AddEditTaskScreen as Composable
+                    // and passing Task_ID as parameter
                     composable(
                         route = ScreenRoutes.AddEditTaskScreen.route +
                                 "?${TASK_ID}={${TASK_ID}}",
@@ -68,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                             taskId = taskId
                         )
                     }
+                    // adding SettingsScreen as Composable
                     composable(route = ScreenRoutes.Settings.route) {
                         SettingsScreen(navController = navController)
                     }
@@ -75,21 +82,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TodoListTheme {
-        Greeting("Android")
     }
 }

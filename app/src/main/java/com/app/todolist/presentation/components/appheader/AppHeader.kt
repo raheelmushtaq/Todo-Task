@@ -30,6 +30,16 @@ import androidx.navigation.NavController
 import com.app.todolist.R
 import com.app.todolist.presentation.utils.screens.ScreenRoutes
 
+/*
+* AppHeader is the header composable which is used for app header.
+* It take different paramters that needs to be shown in the header
+* title for header title
+* navcontroller for handling any navigation action
+* showBackButton, to be shown if we want to add the navigation functioanality
+* showSettingsIcon, for showing settings icon on the right side.
+* Some Modifier for showing handling the UI
+* */
+
 @Composable
 fun AppHeader(
     modifier: Modifier = Modifier,
@@ -37,16 +47,18 @@ fun AppHeader(
     navController: NavController,
     showBackButton: Boolean = false,
     title: String = "",
-    showSettingsIcon:Boolean=false
+    showSettingsIcon: Boolean = false
 ) {
-
+    // this box is the parent box. which uses the modifier
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(color = Color.White),
     ) {
+        // a column composable to show views vertically
         Column(modifier = Modifier.fillMaxWidth()) {
 
+            // a row composeable to show view horizontally
             Row(
                 modifier = modifier
                     .padding(20.dp)
@@ -54,7 +66,9 @@ fun AppHeader(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
+                // show back button if this is true else add a little margin
                 if (showBackButton) {
+                    // Back btton
                     Image(
                         painter = painterResource(id = R.drawable.ic_arrow_right),
                         modifier = Modifier
@@ -63,21 +77,24 @@ fun AppHeader(
                             .rotate(180f)
                             .padding(3.dp)
                             .clickable {
+                                // when back button is clicked go back 1 screen
                                 navController.navigateUp()
                             },
                         contentDescription = stringResource(
                             id = R.string.back
                         ),
                     )
+                    // add a genaring space with the title
                     Spacer(modifier = Modifier.width(10.dp))
-                }
-                if (!showBackButton) {
+                } else {
+                    // show a little space from left
                     Spacer(
                         modifier = Modifier
                             .width(20.dp)
                             .height(30.dp)
                     )
                 }
+                // set title of the header
                 Text(
                     text = title,
                     modifier = titleModifier.weight(1f),
@@ -85,22 +102,28 @@ fun AppHeader(
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.black)
                 )
+                // show settings icon if this is true
 
-                if(showSettingsIcon){
+                if (showSettingsIcon) {
+                    // settings icon
                     Image(
                         modifier = Modifier
                             .width(30.dp)
                             .height(30.dp)
                             .clickable {
+                                // when settings icon is pressed, navigation to the settings screen
                                 navController.navigate(ScreenRoutes.Settings.route)
-                            }.padding(5.dp),
+                            }
+                            .padding(5.dp),
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_settings),
                         contentDescription = "settings"
                     )
                 }
 
             }
+            // add space of 5 height
             Spacer(modifier = Modifier.width(5.dp))
+            //show a horizontab bar with height of 1dp
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

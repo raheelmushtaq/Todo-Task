@@ -15,6 +15,14 @@ import androidx.compose.ui.unit.dp
 import com.app.todolist.presentation.components.textfields.MediumText
 import com.app.todolist.R
 
+/*
+* AppButton is composable which is used in the the application.this component is based on Button.
+* this compoent take different option to show a button
+* modifier for adjusting the UI of button
+* buttonText for show text on button
+* isSecondary for show secondary button secondary button i.e. secondary and primary button design, color SCHEME are different rest functionality is same
+* isDisabked is used for showing a disabled button
+* */
 @Composable
 fun AppButton(
     modifier: Modifier = Modifier,
@@ -23,6 +31,9 @@ fun AppButton(
     isDisabled: Boolean = false,
     onClick: () -> Unit = {}
 ) {
+
+    // Add Buton the compose
+    // setting up the colorscheme for secondary and primary
     Button(
         modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
@@ -32,6 +43,7 @@ fun AppButton(
         enabled = !isDisabled,
         onClick = onClick
     ) {
+        //show Ttle f the button
         MediumText(
             text = stringResource(id = buttonText),
             color = if (!isDisabled) Color.White else Color.Black,

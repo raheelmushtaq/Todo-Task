@@ -12,6 +12,9 @@ import kotlinx.serialization.descriptors.serialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/*
+* This class is used for create serializatin on Persistant list.
+* In this file, there are 2 classes 1 for creating Task persistent List and Other is for String Persistant List which is used for saving categories*/
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = PersistentList::class)
 class SerializerPersistentTask(

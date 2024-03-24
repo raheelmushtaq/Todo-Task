@@ -19,6 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.todolist.presentation.components.textfields.MediumText
 
+/*
+* CateoforyView composable is used to show the cateories. it is also used to show a single value
+* this cmomposeable takes following paramter
+* text to be shown for categpry
+* isCLickable, if it is set to true, then the category view is clickable and if it is false, them category view is not clickable
+* onClick the callback function, when user presses some tasks, then this function is called.*/
 @Composable
 fun CategoryView(
     text: String,
@@ -26,6 +32,7 @@ fun CategoryView(
     showIcon: Boolean = false,
     onClick: () -> Unit = {}
 ) {
+    // show view horizontally
     Row(modifier = Modifier
         .background(Color.White)
         .border(width = 1.dp, color = Color.Black, RoundedCornerShape(10.dp))
@@ -36,7 +43,9 @@ fun CategoryView(
         }
         .padding(vertical = 8.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically) {
+        //if show icon is true then hte tick icon.
         if (showIcon) {
+            //icon view
             Icon(
                 imageVector = Icons.Filled.Check,
                 contentDescription = null,
@@ -45,6 +54,7 @@ fun CategoryView(
             Spacer(modifier = Modifier.width(10.dp))
 
         }
+        //show category titele
         MediumText(text = text)
     }
 }

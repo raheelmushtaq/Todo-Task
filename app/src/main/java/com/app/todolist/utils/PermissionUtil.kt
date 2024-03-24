@@ -5,7 +5,10 @@ import com.intentfilter.androidpermissions.PermissionManager
 import com.intentfilter.androidpermissions.models.DeniedPermissions
 import java.util.Collections
 
+/*
+permission utils is used to request permission frmo user*/
 object PermissionUtil {
+    //this functions user takes context, and permissioon to request and reqturns the success of railure status of the request.
     fun requestPermission(
         context: Context,
         permission: String,

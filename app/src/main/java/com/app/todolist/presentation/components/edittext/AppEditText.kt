@@ -23,7 +23,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.todolist.R
-
+/*
+* AppEditText is composable which is used in the the application.this component is based on InputField.
+* this compoent take different option to show a InputField
+*  textFieldValue to be, which is the value we have saved on when user types the text
+* hint is used to show the placeholder in case if their is no textFieldValue
+* onValueChnge callback is used when user has listen the change on text field i.e. when user is typg. t
+* read only is to show that this valye is only for read and it cannot be editble
+* onDone callback is calledcalled when user presses the search or done button on the keyvoard
+* */
 @Composable
 fun AppEditTextField(
     textFieldValue: String,
@@ -32,8 +40,8 @@ fun AppEditTextField(
     readOnly: Boolean = true,
     onDone: () -> Unit = {},
 ) {
-    Column {
-        OutlinedTextField(
+//    show outlined TextField for user
+    OutlinedTextField(
             value = textFieldValue,
             label = { Text(text = hint) },
             singleLine = true,
@@ -49,9 +57,17 @@ fun AppEditTextField(
             ),
             keyboardActions = KeyboardActions(onDone = { onDone() }),
         )
-    }
 }
 
+/*
+* AppDescriptionTextField is composable which is used in the the application.this component is based on InputField.
+* this compoent take different option to show a InputField
+*  textFieldValue to be, which is the value we have saved on when user types the text
+* hint is used to show the placeholder in case if their is no textFieldValue
+* onValueChnge callback is used when user has listen the change on text field i.e. when user is typg. t
+* read only is to show that this valye is only for read and it cannot be editble
+* onDone callback is calledcalled when user presses the search or done button on the keyvoard
+* */
 @Composable
 fun AppDescriptionTextField(
     textFieldValue: String,
@@ -60,9 +76,8 @@ fun AppDescriptionTextField(
     readOnly: Boolean = true,
     onDone: () -> Unit = {},
 ) {
-    Column {
-
-        OutlinedTextField(
+    //    show outlined TextField for user with a bigger height
+    OutlinedTextField(
             value = textFieldValue,
             label = { Text(text = hint) },
             singleLine = false,
@@ -78,9 +93,17 @@ fun AppDescriptionTextField(
             ),
             keyboardActions = KeyboardActions(onDone = { onDone() }),
         )
-    }
 }
-
+/*
+* SearchEditTextField is composable which is used in the the application.this component is based on search bar.
+* this compoent take different option to show a InputField
+*  textFieldValue to be, which is the value we have saved on when user types the text
+* hint is used to show the placeholder in case if their is no textFieldValue
+* onValueChnge callback is used when user has listen the change on text field i.e. when user is typg. t
+* onDone callback is calledcalled when user presses the search or done button on the keyvoard
+* showFilterIcon is used to show filteIcon on the right side if it is true,
+* onFilterIconPressed is called when the filter icon is pressed.
+* */
 @Composable
 fun SearchEditTextField(
     textFieldValue: String,
@@ -96,6 +119,7 @@ fun SearchEditTextField(
         label = { Text(text = hint) },
         singleLine = true,
         leadingIcon = {
+            // leadingIcn is the left icon of the TextField.
             Image(
                 modifier = Modifier
                     .width(30.dp)
@@ -114,9 +138,12 @@ fun SearchEditTextField(
         shape = RoundedCornerShape(30),
         keyboardActions = KeyboardActions(onSearch = { onDone() }),
         trailingIcon = {
+            //trailing icon are the right icons
+            // if their is a value in the text field or filter icon is set to try then this layout is visible to user
             if (textFieldValue.isNotEmpty() || showFilterIcon) {
                 Row {
 
+                    //if textFieldValue is not empty, then show the cross button on which when user presses, set the value to empty
                     if (textFieldValue.isNotEmpty()) {
                         Image(
                             modifier = Modifier
@@ -130,6 +157,7 @@ fun SearchEditTextField(
                         )
                     }
 
+                    // if showFIlterIcon is tru then show the filter icon
 
                     if (showFilterIcon) {
                         Image(modifier = Modifier
@@ -147,13 +175,4 @@ fun SearchEditTextField(
                 }
             }
         })
-}
-
-
-@Preview
-@Composable
-fun PreviewAppEditText() {
-    Column {
-        SearchEditTextField(textFieldValue = "", hint = "Search", onValueChange = {})
-    }
 }

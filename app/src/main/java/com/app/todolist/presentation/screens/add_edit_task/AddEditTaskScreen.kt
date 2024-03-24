@@ -61,22 +61,30 @@ fun AddEditTodoScreen(
 ) {
 
 
+    // fetchin the current value of the data state. when the datastate is update, the ui is recomposed
     val state = viewModel.dataState.value
+
+    //etchin the current value of the data state. when the categories is update, the ui is recomposed
     val categories = viewModel.appSettings.value.categories
 
+    // context isused to show toast to user
     val context = LocalContext.current
 
 
+    // by setting the key1 to true, this LaunchEffect is only generated at first and it is not recomposed when state changes
     LaunchedEffect(key1 = true) {
+        // here we are listeneing to any action which is fone for user to see from viewmodel i.e. success of saving or udating tasks, or showigng ttite is missin
         viewModel.addEditUiEvent.collectLatest { event ->
             when (event) {
                 is AddEditUIEvent.Error -> {
+                    // the error is thrown than show toast to user
                     Toast.makeText(
                         context, context.getString(event.errorId), Toast.LENGTH_SHORT
                     ).show()
                 }
 
                 is AddEditUIEvent.Success -> {
+                    // the success is thrown than show toast to user and navigate back to previous screen
                     Toast.makeText(
                         context,
                         context.getString(if (taskId == -1) R.string.task_added_successfully else R.string.task_updated_successfuly),
@@ -88,13 +96,16 @@ fun AddEditTodoScreen(
         }
     }
 
+    // this is used from teh lirary maxkeppeler where it is used to remember the current state of hte Calender
     val calendarState = rememberSheetState()
+    //created a calender Dialog for user with default settings
     CalendarDialog(state = calendarState, config = CalendarConfig(
         monthSelection = true,
         yearSelection = true,
         minYear = Calendar.YEAR,
         disabledTimeline = CalendarTimeline.PAST,
     ), selection = CalendarSelection.Date { date ->
+//        when date is selected the pass the to the viewmodel
         viewModel.onEvent(
             AddEditActionEvent.SelectDueDate(
                 date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString()
@@ -102,22 +113,31 @@ fun AddEditTodoScreen(
         )
     })
 
+    // focus manager is used remove the focus on the keyboard
     val focusManager = LocalFocusManager.current
+    //Scaffold implements the basic material design visual layout structure.
+    //This component provides API to put together several material components to construct your screen
     Scaffold(modifier = Modifier.pointerInput(key1 = true) {
+        // when user presses our side of the ui then close the keyboard
         detectTapGestures(onTap = { focusManager.clearFocus() })
     }, topBar = {
+        // check which title to show. if taskid is not provided then show add task,
+        // but if it provided that check whatt the state of completing status and udpate the title according
         val title = if (taskId != -1) {
             if (state.isCompleted) R.string.completed_task
             else R.string.edit_todo
         } else {
             R.string.add_todo
         }
+        // add AppHeader as Screen Header, showing settings icon
         AppHeader(
             showBackButton = true, navController = navController, title = stringResource(id = title)
         )
     }) { padding ->
 
+//create the base coluymn with the padding provided by scaffold
         Column(modifier = Modifier.padding(padding)) {
+            // create a box as parent
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -125,52 +145,71 @@ fun AddEditTodoScreen(
                     .padding(10.dp)
 
             ) {
+                // ading a column to show composable
                 Column(
                     modifier = Modifier.padding(bottom = 5.dp),
                 ) {
 
+                    // adding a text fied for taking title as input from user
                     AppEditTextField(textFieldValue = state.title,
                         hint = stringResource(id = R.string.title),
                         readOnly = state.isCompleted,
                         onValueChange = { text ->
+                            // when ever title is updated, then sent event to the ViewModel
                             viewModel.onEvent(
                                 AddEditActionEvent.EnterTitle(
                                     text
                                 )
                             )
                         },
-                        onDone = { focusManager.clearFocus() })
+                        onDone = {
+                            //when user presses the done button, then creat the focus and kyeboard will hide
+                            focusManager.clearFocus()
+                        })
 
                     Spacer(modifier = Modifier.height(5.dp))
+
+                    // adding a description fied for taking Descritipm as input from user
 
                     AppDescriptionTextField(textFieldValue = state.description,
                         hint = stringResource(id = R.string.description),
                         readOnly = state.isCompleted,
-                        onValueChange = { viewModel.onEvent(AddEditActionEvent.EnterDescription(it)) },
-                        onDone = { focusManager.clearFocus() })
+                        onValueChange = { text ->
+                            // when ever title is updated, then sent event to the ViewModel
+                            viewModel.onEvent(AddEditActionEvent.EnterDescription(text))
+                        },
+                        onDone = {                            //when user presses the done button, then creat the focus and kyeboard will hide
+                            focusManager.clearFocus()
+                        })
 
                     Spacer(modifier = Modifier.height(10.dp))
 
+                    // showing the priority view to userwis
                     PriorityView(
                         defaultPriority = state.taskPriority, showOnlySelected = state.isCompleted,
                     ) {
                         it?.let {
+                            // when ever TaskPripeorty is selected, then sent event to the ViewModel
                             viewModel.onEvent(AddEditActionEvent.EnterPriority(it))
                         }
 
                     }
                     Spacer(modifier = Modifier.height(10.dp))
+                    // showing Caregories view to user where user ha to select the categories.
+                    // the cateogotires are retreived from the datastore and showed here
                     CategoriesFilterView(
                         defaultValue = state.category,
                         categories = if (state.isCompleted) arrayListOf(state.category.toString()) else categories,
                         readOnly = state.isCompleted
                     ) {
                         it?.let {
+                            // when ever Category is selected, then sent event to the ViewModel
                             viewModel.onEvent(AddEditActionEvent.EnterCategory(it))
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    //showing Due date view
                     Column {
 
                         MediumText(
@@ -184,11 +223,13 @@ fun AddEditTodoScreen(
                                 width = 1.dp, color = Color.Black, RoundedCornerShape(10.dp)
                             )
                             .clickable {
+                                // when user presses the due date then show the dialog ofif the task is not completed
                                 if (!state.isCompleted) calendarState.show()
                             }
                             .padding(vertical = 10.dp)
                             .padding(start = 20.dp, end = 10.dp),
                             verticalAlignment = Alignment.CenterVertically) {
+                            // set the date
                             MediumText(
                                 text = state.date.ifEmpty { "DD-MM-YYYY" },
                                 color = if (state.date.isNotEmpty())
@@ -199,6 +240,7 @@ fun AddEditTodoScreen(
 
                             Spacer(modifier = Modifier.width(10.dp))
 
+                            // arrow icon to the end of due date
                             Icon(
                                 modifier = Modifier
                                     .width(20.dp)
@@ -210,8 +252,10 @@ fun AddEditTodoScreen(
                     }
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // if the task is competed the their is no need to show the button to update or save
                     if (!state.isCompleted) {
                         Row(modifier = Modifier.fillMaxWidth()) {
+                            // checking if user is eding the task, show cancel button
                             if (taskId != -1) {
                                 Row(modifier = Modifier.weight(1f)) {
 
@@ -225,9 +269,11 @@ fun AddEditTodoScreen(
                                     Spacer(modifier = Modifier.width(10.dp))
                                 }
                             }
+                            // show add button to user but if it is editing the task then change the text to user
                             AppButton(
                                 onClick = {
-                                    viewModel.onEvent(AddEditActionEvent.SaveNote)
+                                    // on presing the button, send event to save taks
+                                    viewModel.onEvent(AddEditActionEvent.SaveTask)
                                 },
                                 modifier = Modifier
                                     .weight(1f)

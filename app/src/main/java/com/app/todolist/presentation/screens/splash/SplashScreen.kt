@@ -30,28 +30,38 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.app.todolist.R
+import com.app.todolist.presentation.screens.splash.state_event.SplashUIEvent
 import com.app.todolist.presentation.screens.splash.viewmodel.SplashViewModel
 import com.app.todolist.presentation.utils.screens.ScreenRoutes
 import com.app.todolist.utils.PermissionUtil
 import kotlinx.coroutines.flow.collectLatest
 
+//
 @Composable
 fun SplashScreen(
     navController: NavController, viewModel: SplashViewModel = hiltViewModel()
 ) {
+    // getting the context
     val context = LocalContext.current
-    val uiData = viewModel.uiData.value
+
+    // fetchin the current value of the data state. when the datastate is update, the ui is recomposed
+    val uiData = viewModel.dataState.value
 
 
+    // ath the first launch of the applicatioon
     LaunchedEffect(key1 = "true", block = {
 
-//        LanguageUtils.changeLanguage(context, viewModel.getLanguage())
+        //checking if the permission is granter or not if not gradnted then requesting permission to be shown to user
         runWithNotificationPermissionCheck(context) {
+            // getting tasks from viewmodel
             viewModel.fetchTasks()
         }
+        // here we are listeneing to any action which is fone for user to see from viewmodel i.e. success of fetchin tasks and ccategory or error for network failure
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
-                is SplashViewModel.UIEvent.Success -> {
+                // if event is success
+                is SplashUIEvent.Success -> {
+                    // navigate user to Task list Screen and making when user presses the back button, removing splash as well.
                     navController.navigate(ScreenRoutes.TaskListScreen.route) {
                         launchSingleTop = true
                         popUpTo(ScreenRoutes.SplashScreen.route) {
@@ -59,8 +69,9 @@ fun SplashScreen(
                         }
                     }
                 }
-
-                is SplashViewModel.UIEvent.Error -> {
+                // if event error is occured
+                is SplashUIEvent.Error -> {
+//                    show toast to user in case of data is not fetche
                     Toast.makeText(
                         context, context.getString(event.message), Toast.LENGTH_LONG
                     ).show()
@@ -69,13 +80,19 @@ fun SplashScreen(
 
         }
     })
+
+
+    //Scaffold implements the basic material design visual layout structure.
+    //This component provides API to put together several material components to construct your screen
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValue ->
+        //create the base Box with the padding provided by scaffold
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color.White)
                 .padding(paddingValue)
         ) {
+//            creating a column to show logo and other information
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,6 +100,7 @@ fun SplashScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // adding image to UI
                 Image(
                     painter = painterResource(id = R.drawable.app_icon),
                     contentDescription = stringResource(id = R.string.app_name),
@@ -92,6 +110,7 @@ fun SplashScreen(
                 )
 
             }
+            // at the bottom of the screen, if loading state is true than show loader, and if error is true than show the error
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,6 +119,7 @@ fun SplashScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
+                // incase of loadig show loader
                 if (uiData.isLoading) {
                     Spacer(modifier = Modifier.height(32.dp))
                     CircularProgressIndicator(
@@ -110,6 +130,8 @@ fun SplashScreen(
                     Spacer(modifier = Modifier.height(32.dp))
                 }
                 if (uiData.isError) {
+                    // incase of Error shiow diwload  show loader
+
                     Button(onClick = { viewModel.fetchTasks() }) {
                         Text(text = stringResource(id = R.string.retry))
                     }

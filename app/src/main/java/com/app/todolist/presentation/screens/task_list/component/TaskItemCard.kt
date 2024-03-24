@@ -32,11 +32,12 @@ import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.presentation.utils.filters.TaskPriority
 
 @Composable
-fun TodoListItem(
+fun TaskItemCard(
     modifier: Modifier = Modifier, item: Tasks, onClick: (Tasks) -> Unit = {},
     onDelete: (item: Tasks) -> Unit,
     onMarkAsComplete: (item: Tasks) -> Unit,
 ) {
+    // defining the color for the priorrity bases, which ishown on the right side top of task item.
     val priorityColor = if (item.priority.equals(
             TaskPriority.High.value,
             true
@@ -47,102 +48,118 @@ fun TodoListItem(
         )
     ) Color.Yellow else Color.Green
 
+    // creating the card
     Card(
         modifier = modifier.fillMaxWidth(),
         onClick = { onClick(item) },
         colors = CardDefaults.cardColors(
         )
     ) {
-        Box {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-            ) {
-                Row {
-                    MediumText(
-                        text = item.title,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 2,
-                        modifier = Modifier.weight(1f)
-                    )
+        // adding a column
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Row {
+                //showing the title of the tasks
+                MediumText(
+                    text = item.title,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    modifier = Modifier.weight(1f)
+                )
 
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .background(
-                                priorityColor,
-                                RoundedCornerShape(100)
-                            )
-                    )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                MediumText(text = item.description, maxLines = 3)
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        RegularText(
-                            text = stringResource(id = R.string.date), fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        MediumText(text = item.date)
-                    }
-
-
-                    Row(
-                        modifier = Modifier
-                            .background(
-                                color = colorResource(id = R.color.accept),
-                                shape = RoundedCornerShape(30)
-                            )
-                            .padding(vertical = 5.dp, horizontal = 10.dp)
-                            .clickable {
-                                if (!item.isCompleted) onMarkAsComplete(item)
-                            }, verticalAlignment = Alignment.CenterVertically
-
-                    ) {
-                        if (!item.isCompleted) {
-                            RegularText(
-                                text = stringResource(id = R.string.mark_as_complete),
-                                color = Color.White
-                            )
-
-                        } else {
-                            Icon(
-                                imageVector = Icons.Filled.Check,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp),
-                                tint = Color.White
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            MediumText(
-                                text = stringResource(id = R.string.completed),
-                                color = Color.White
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Row(modifier = Modifier
+                // showing priority color as a circle
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
                         .background(
-                            color = colorResource(id = R.color.delete),
+                            priorityColor,
+                            RoundedCornerShape(100)
+                        )
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            // showing a description
+            MediumText(text = item.description, maxLines = 3)
+            Spacer(modifier = Modifier.height(10.dp))
+            // adding a row
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // adding a column to show date
+                Column(modifier = Modifier.weight(1f)) {
+                    // date heading
+                    RegularText(
+                        text = stringResource(id = R.string.date), fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    // showing date
+                    MediumText(text = item.date)
+                }
+
+
+                //showing the action buttnn mark Complete or Completed
+                Row(
+                    modifier = Modifier
+                        .background(
+                            color = colorResource(id = R.color.accept),
                             shape = RoundedCornerShape(30)
                         )
                         .padding(vertical = 5.dp, horizontal = 10.dp)
                         .clickable {
-                            onDelete(item)
-                        }
+//                        on clicking calling the callback function to perform the mark as read  action if the task is not already completed
 
+                            if (!item.isCompleted) onMarkAsComplete(item)
+                        }, verticalAlignment = Alignment.CenterVertically
 
-                    ) {
+                ) {
+                    // checking if task is not completed then simpley added a taxt
+                    if (!item.isCompleted) {
                         RegularText(
-                            text = stringResource(id = R.string.delete),
+                            text = stringResource(id = R.string.mark_as_complete),
+                            color = Color.White
+                        )
+
+                    } else {
+                        // if task is completed then adding a check icon with the text
+                        // shwing check icon
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        // showing completed text
+                        MediumText(
+                            text = stringResource(id = R.string.completed),
                             color = Color.White
                         )
                     }
                 }
-            }
 
+                Spacer(modifier = Modifier.width(10.dp))
+                // showing the delete button
+                Row(modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.delete),
+                        shape = RoundedCornerShape(30)
+                    )
+                    .padding(vertical = 5.dp, horizontal = 10.dp)
+                    .clickable {
+//                        on clicking calling the callback function to perform the delete action
+                        onDelete(item)
+                    }
+
+
+                ) {
+                    // deltee text
+                    RegularText(
+                        text = stringResource(id = R.string.delete),
+                        color = Color.White
+                    )
+                }
+            }
         }
     }
 }

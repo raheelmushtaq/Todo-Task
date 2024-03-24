@@ -10,28 +10,46 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 
+// All the components in this clas are the used to thow text orf differenct sizes
+// these classes are used here to show a generic and fixed font size that is displayed in the whole application/
+
+/*SmallText is used to show  text with  font size 13
+* it takes text as input to show
+* and color to set color of the text, by default itis black.
+* font weight to show font bold or normal
+* max Lines this Text will have. */
 @Composable
 fun SmallText(
     modifier: Modifier = Modifier,
     text: String,
-    maxLines: Int = 1,
-    isError: Boolean = false
+    color: Color = Color.Black,
+    maxLines: Int = Int.MAX_VALUE,
+    align: TextAlign = TextAlign.Start,
+    fontWeight: FontWeight = FontWeight.Normal,
 ) {
     Text(
         text = text,
-        color = if (isError) Color.Red else Color.Black,
+        color = color,
         fontSize = 13.sp,
+        fontWeight = fontWeight,
         fontFamily = FontFamily.SansSerif,
         modifier = modifier,
         maxLines = maxLines
     )
 }
 
+
+/*RegularText is used to show  text with  font size 15
+* it takes text as input to show
+* and color to set color of the text, by default itis black.
+* font weight to show font bold or normal
+* max Lines this Text will have. */
 @Composable
 fun RegularText(
     modifier: Modifier = Modifier,
     text: String,
     fontWeight: FontWeight = FontWeight.Normal,
+    align: TextAlign = TextAlign.Start,
     color: Color = Color.Black,
     maxLines: Int = Int.MAX_VALUE
 ) {
@@ -42,15 +60,23 @@ fun RegularText(
         fontSize = 15.sp,
         fontWeight = fontWeight,
         fontFamily = FontFamily.SansSerif,
-        modifier = modifier
+        modifier = modifier,
+        textAlign = align
+
     )
 }
 
+/*MediumText is used to show  text with  font size 17
+* it takes text as input to show
+* and color to set color of the text, by default itis black.
+* font weight to show font bold or normal
+* max Lines this Text will have. */
 @Composable
 fun MediumText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
+    align: TextAlign = TextAlign.Start,
     fontWeight: FontWeight = FontWeight.Normal,
     maxLines: Int = Int.MAX_VALUE
 ) {
@@ -61,10 +87,17 @@ fun MediumText(
         fontSize = 17.sp,
         fontWeight = fontWeight,
         fontFamily = FontFamily.SansSerif,
-        modifier = modifier
+        modifier = modifier,
+        textAlign = align
+
     )
 }
 
+/*LargeText is used to show  text with  font size 19
+* it takes text as input to show
+* and color to set color of the text, by default itis black.
+* font weight to show font bold or normal
+* max Lines this Text will have. */
 @Composable
 fun LargeText(
     modifier: Modifier = Modifier,
@@ -87,6 +120,12 @@ fun LargeText(
     )
 }
 
+
+/*HeadingText is used to show  text with  font size 24
+* it takes text as input to show
+* and color to set color of the text, by default itis black.
+* font weight to show font bold or normal
+* max Lines this Text will have. */
 @Composable
 fun HeadingText(
     text: String,

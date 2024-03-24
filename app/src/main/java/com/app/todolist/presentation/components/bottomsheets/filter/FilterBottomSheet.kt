@@ -36,6 +36,16 @@ import com.app.todolist.presentation.utils.filters.SortBy
 import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.presentation.utils.filters.TaskPriority
 
+/*
+* FilterBottomSheet is used to show filter Dialog for the user.
+* it takes following paramters
+* heading to show on the header
+* dialogstate for visbility state
+* selectedTasksFilter for showing if filter was already applied, then showing these values when filter openns
+* applyFilter a callback function when user presses the apply button. it takes the TaskFilters object as a parameter
+* onDismiss function is called when user either drags the bottom sheet down, or user presses outside of the dialog
+* categories to show to the user.
+*  */
 @Composable
 fun FilterBottomSheet(
     heading: String,
@@ -47,16 +57,30 @@ fun FilterBottomSheet(
 ) {
 
 
+    //base bottomsheet dialog
     BottomSheetDialog(
         dialogState = dialogState,
         modifier = Modifier.height(530.dp),
         heading,
         onDismiss = onDismiss
     ) {
-        FilterView(selectedTaskFilters = selectedTaskFilters, categories, applyFilter)
+        // here we have add a filter which takes selectedFilter, categories, and applyFilter callBack
+        FilterView(
+            selectedTaskFilters = selectedTaskFilters,
+            categories = categories,
+            applyFilter = applyFilter
+        )
     }
 }
 
+
+/*
+* FilterView is to  show filter view inside the bottom sheet dialog.
+* it take
+* defautlt/previous selected filter
+* categories
+* and apply button
+* */
 
 @Composable
 fun FilterView(
@@ -66,14 +90,19 @@ fun FilterView(
 ) {
 
 
+    // saving the state of the selected priority
     val selectedPriority = remember { mutableStateOf(selectedTaskFilters.taskPriority) }
 
+    // saving the state of the selected SortBy option
     val selectedSortBy = remember { mutableStateOf(selectedTaskFilters.sortBy) }
 
+    // saving the state of the selected OrderBy option
     val selectedOrderBy = remember { mutableStateOf(selectedTaskFilters.orderBy) }
 
+    // saving the state of the selected category
     val selectedCategory = remember { mutableStateOf(selectedTaskFilters.category) }
 
+    // function to be called when user presses the clear or Apply button
     fun onApplyFilter() {
         applyFilter.invoke(
             TaskFilters(
@@ -85,6 +114,8 @@ fun FilterView(
         )
     }
 
+    // this function will be called every time when the state of the selectedTaskFilter changes
+    //this function will set the selected Filer properites to its respected data states
     LaunchedEffect(key1 = selectedTaskFilters) {
         selectedPriority.value = selectedTaskFilters.taskPriority
         selectedOrderBy.value = selectedTaskFilters.orderBy
@@ -92,6 +123,7 @@ fun FilterView(
         selectedCategory.value = selectedTaskFilters.category
     }
 
+    // Compose to show the view vertically
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -99,46 +131,64 @@ fun FilterView(
             .background(Color.White)
     ) {
 
+        // Proirity view to show to user.
+        // it will return the selected state when user changes Priority like Selecting High or Selected Low
         PriorityView(defaultPriority = selectedPriority.value) {
             selectedPriority.value = it
         }
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Sort by view with ascending and Descending option
+        // it will return the selected state when user changes the SortBy
         SortByView(defaultValue = selectedSortBy.value) {
             selectedSortBy.value = it
 
         }
         Spacer(modifier = Modifier.height(10.dp))
+
+        // Order by view with ascending and Descending option
+        // it will return the selected state when user changes the OrderBy
+
         OrderByView(defaultValue = selectedOrderBy.value) {
             selectedOrderBy.value = it
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        //
+        // Category view to show list of categories
+        // it will return the selected state when user changes the SortBy
         CategoriesFilterView(defaultValue = selectedCategory.value, categories) {
             selectedCategory.value = it
-
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
 
+        //show button horizontally
         Row(modifier = Modifier.fillMaxWidth()) {
+            //clear button
             AppButton(isSecondary = true,
                 buttonText = R.string.clear,
                 modifier = Modifier.weight(1f),
                 isDisabled = false,
                 onClick = {
+                    // when user presses clear button, then remove all teh filter,
+                    // and set the default value for orderby, and sortBy,
+                    // and call the function to close the dialog and show All the Tasks
                     selectedCategory.value = null
                     selectedOrderBy.value = OrderBy.Date
+                    selectedSortBy.value = SortBy.Descending
                     selectedPriority.value = null
                     onApplyFilter()
                 })
             Spacer(modifier = Modifier.width(10.dp))
+            //apply button
             AppButton(buttonText = R.string.apply,
                 modifier = Modifier.weight(1f),
                 isDisabled = false,
                 onClick = {
+                    // apply button to apply the filter/
                     onApplyFilter()
                 })
         }
@@ -147,6 +197,14 @@ fun FilterView(
 }
 
 
+/*
+* Priority view is used to show section button with 3 different options from the TaskPriority class.
+* low, mediu, and high
+* the paramters for this composable are
+* defaultPriority is the selected Priority, by default it is null, but if user has already applied the filtert
+* then this will show the selected value
+* showOnlySelected is used to in case of the completed Tasks, i,e, if the task is already completed abd thnen we do not need to show user theoptoion to perfor selection
+* onSelect callback with Taskpriotiry will pass the selected value the composeable to save for applying filter*/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriorityView(
@@ -154,24 +212,33 @@ fun PriorityView(
     showOnlySelected: Boolean = false,
     onSelect: (TaskPriority?) -> Unit
 ) {
+    // default selected priority
     val selectedPriority = remember { mutableStateOf(defaultPriority) }
 
+    // list of priorities from TaskPriority
     val taskPriorityArrayLists =
         arrayListOf(TaskPriority.Low, TaskPriority.Medium, TaskPriority.High)
+
+    // this will be called every time if the default state is changed
     LaunchedEffect(key1 = defaultPriority) {
         selectedPriority.value = defaultPriority
     }
+    // showing the heading of Priorty
     MediumText(text = stringResource(id = R.string.priority), fontWeight = FontWeight.Bold)
+
     Spacer(modifier = Modifier.height(5.dp))
+    // if user is in the completed screen, then showOnlySelected will be true and in this case, we have a default view created for Categories, we are showing this here.
     if (showOnlySelected) {
+        // category view
         CategoryView(
             text = stringResource(id = selectedPriority.value?.resId ?: R.string.low),
             showIcon = true,
             isClickable = false
         )
     } else {
-
+        //if not completed then show the segmented button with single selectble option
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            // loop through all the list of Prioroty and add the segmented button
             taskPriorityArrayLists.forEachIndexed { index, priority ->
                 SegmentedButton(
                     shape = SegmentedButtonDefaults.itemShape(
@@ -182,12 +249,14 @@ fun PriorityView(
                         activeContainerColor = Color.White,
                         inactiveContainerColor = Color.White,
                     ), onClick = {
+                        // when user person the segment button, check if the selected valye is not same then select the value
                         if (selectedPriority.value != priority) {
                             selectedPriority.value = priority
                             onSelect(selectedPriority.value)
                         }
-                    }, selected = selectedPriority.value == priority
+                    }, selected = selectedPriority.value == priority // show tick icon for the selected valie
                 ) {
+                    // title of the priority
                     MediumText(text = stringResource(id = priority.resId))
                 }
             }
@@ -196,18 +265,28 @@ fun PriorityView(
 
 }
 
+/*Sortby view is used to show two types of options, Asending or Descending
+* this composable take 2 paramter,
+* selecteSortby, which is the defaul value
+* onSelect a callback function it is called when user changes te sort by*/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SortByView(defaultValue: SortBy, onSelect: (SortBy) -> Unit) {
+    // default selected sort bv value
     val selectedSortBy = remember { mutableStateOf(defaultValue) }
+    // created a list to show segmented button
     val sortByList = arrayListOf(SortBy.Ascending, SortBy.Descending)
 
+    // this will be called every time if the default state is changed
     LaunchedEffect(key1 = defaultValue) {
         selectedSortBy.value = defaultValue
     }
 
+    // show the heading
     MediumText(text = stringResource(id = R.string.sort_by), fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(5.dp))
+
+    //show the segmented button with single selectble option
 
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         sortByList.forEachIndexed { index, sortBy ->
@@ -219,31 +298,43 @@ fun SortByView(defaultValue: SortBy, onSelect: (SortBy) -> Unit) {
                     activeContainerColor = Color.White,
                     inactiveContainerColor = Color.White,
                 ), onClick = {
+                    // when user person the segment button, check if the selected valye is not same then select the value
                     if (selectedSortBy.value != sortBy) {
                         selectedSortBy.value = sortBy
                         onSelect(sortBy)
                     }
-                }, selected = selectedSortBy.value == sortBy
+                }, selected = selectedSortBy.value == sortBy // show tick icon for the selected value
             ) {
+                // title of the sortyby
                 MediumText(text = stringResource(id = sortBy.resId))
             }
         }
     }
 
 }
+/*OrderBy view is used to show 3 different options from OrderBy class
+* this composable take 2 paramter,
+* defalutValue, which is the or selected value fo the filter
+* onSelect a callback function it is called when user changes te OrdeBy by*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
+    // default selected order bv value
 
     val selectedOrderBy = remember { mutableStateOf(defaultValue) }
+    // created a list to show segmented button
     val orderByList = arrayListOf(OrderBy.Date, OrderBy.Title, OrderBy.Completed)
+
+    // this will be called every time if the default state is changed
     LaunchedEffect(key1 = defaultValue) {
         selectedOrderBy.value = defaultValue
     }
+    // show the heading
     MediumText(text = stringResource(id = R.string.order_by), fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(5.dp))
 
+    //show the segmented button with single selectble option
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         orderByList.forEachIndexed { index, orderBy ->
             SegmentedButton(
@@ -254,13 +345,15 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
                     activeContainerColor = Color.White,
                     inactiveContainerColor = Color.White,
                 ), onClick = {
+                    // when user person the segment button, check if the selected valye is not same then select the value
                     if (selectedOrderBy.value != orderBy) {
                         selectedOrderBy.value = orderBy
                         onSelect(orderBy)
                     }
 
-                }, selected = selectedOrderBy.value == orderBy
+                }, selected = selectedOrderBy.value == orderBy// show tick icon for the selected value
             ) {
+                // title of the orderby
                 MediumText(text = stringResource(id = orderBy.keyRes))
             }
         }
@@ -268,6 +361,12 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
 
 }
 
+/*Categories filter view is used to show list of filters
+* this composable take 4 parameter,
+* defalutValue, which is the or selected value fo the category
+* categories which is the list of categories which we have saved
+* readOnly is used for the cases if we want to only who value and it is not clickable
+* onSelect a callback function it is called when user changes te category by*/
 @Composable
 fun CategoriesFilterView(
     defaultValue: String?,
@@ -275,26 +374,33 @@ fun CategoriesFilterView(
     readOnly: Boolean = false,
     onSelect: (String?) -> Unit
 ) {
+    // default selected order bv value
     val selectedCategory = remember { mutableStateOf(defaultValue) }
+    // this will be called every time if the default state is changed
     LaunchedEffect(key1 = defaultValue) {
         selectedCategory.value = defaultValue
     }
+    // show the heading
     MediumText(
         text = stringResource(id = R.string.categories), fontWeight = FontWeight.Bold
     )
     Spacer(modifier = Modifier.height(10.dp))
 
+
+    //show the list of Category view button with single selectble option
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(categories.size) { index ->
             val category = categories[index]
+                //using the compoenent to show the  category view.
             CategoryView(
                 text = category,
                 isClickable = !readOnly,
                 showIcon = selectedCategory.value.equals(category)
             ) {
+                // when user a category, then this callback function is called which saved the defualt value
                 selectedCategory.value = category
                 onSelect(category)
             }

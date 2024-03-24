@@ -18,6 +18,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+/*
+* Di Module for Hilt*/
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
