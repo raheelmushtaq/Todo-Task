@@ -13,12 +13,15 @@ import com.app.todolist.presentation.utils.filters.OrderBy
 import com.app.todolist.presentation.utils.filters.SortBy
 import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.utils.DebounceSearchUtils
+import com.app.todolist.utils.getDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 
 /*
@@ -37,18 +40,20 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
     // created a mutable state for user with default value,
     // when user enters a title, then this state is updated with the latest title
     private val _dataState = mutableStateOf(TaskListDataState())
+
     //this is State variable of the _dataState, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
     val dataState: State<TaskListDataState> = _dataState
     //create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmodel, this value is updated
 
     private val _dataStoreLiveState = mutableStateOf(AppSettings())
+
     //this is State variable of the _appsettings, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
     val dataStoreLiveState: MutableState<AppSettings> = _dataStoreLiveState
 
     init {
         // in this init of viewmodel  added a flow listener on the datastore, update the _appsettings value
         viewModelScope.launch {
-            dataStoreHandler. getAppSettings().onEach {
+            dataStoreHandler.getAppSettings().onEach {
                 _appSettings.value = it
                 _dataStoreLiveState.value = it
                 // fetch task on teh basis of previous search
@@ -94,15 +99,15 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                     // Ascending sort, then sort them by the order by field
                     when (taskFilters.orderBy) {
                         is OrderBy.Title -> tasks.sortedBy { it.title.lowercase() }
-                        is OrderBy.Date -> tasks.sortedBy { it.date }
+                        is OrderBy.Date -> tasks.sortedBy { it.date.getDate() }
                         is OrderBy.Completed -> tasks.sortedBy { it.isCompleted }
                     }
                 }
-                    // Descending sort, then sort them by the order by field
+                // Descending sort, then sort them by the order by field
                 is SortBy.Descending -> {
                     when (taskFilters.orderBy) {
                         is OrderBy.Title -> tasks.sortedByDescending { it.title.lowercase() }
-                        is OrderBy.Date -> tasks.sortedByDescending { it.date }
+                        is OrderBy.Date -> tasks.sortedByDescending { it.date.getDate() }
                         is OrderBy.Completed -> tasks.sortedByDescending { it.isCompleted }
                     }
                 }
