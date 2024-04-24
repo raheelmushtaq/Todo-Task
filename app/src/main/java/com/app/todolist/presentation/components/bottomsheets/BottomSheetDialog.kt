@@ -4,9 +4,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -67,7 +70,9 @@ fun BottomSheetDialog(
                 topEnd = 12.dp
             ),
 
-            windowInsets = WindowInsets.ime,
+            windowInsets =  WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Vertical
+            ),
             dragHandle = {}
         ) {
             // showing the header view for the bottom sheet.

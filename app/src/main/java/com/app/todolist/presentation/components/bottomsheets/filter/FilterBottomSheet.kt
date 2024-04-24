@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -101,6 +102,7 @@ fun FilterView(
 
     // saving the state of the selected category
     val selectedCategory = remember { mutableStateOf(selectedTaskFilters.category) }
+    val showDelete = remember { mutableStateOf(selectedTaskFilters.showDeleted) }
 
     // function to be called when user presses the clear or Apply button
     fun onApplyFilter() {
@@ -109,7 +111,8 @@ fun FilterView(
                 taskPriority = selectedPriority.value,
                 orderBy = selectedOrderBy.value,
                 sortBy = selectedSortBy.value,
-                category = selectedCategory.value
+                category = selectedCategory.value,
+                showDeleted = showDelete.value
             )
         )
     }
@@ -121,6 +124,7 @@ fun FilterView(
         selectedOrderBy.value = selectedTaskFilters.orderBy
         selectedSortBy.value = selectedTaskFilters.sortBy
         selectedCategory.value = selectedTaskFilters.category
+        showDelete.value = selectedTaskFilters.showDeleted
     }
 
     // Compose to show the view vertically
@@ -164,6 +168,19 @@ fun FilterView(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(checked = showDelete.value, onCheckedChange = {
+                showDelete.value = it
+            })
+
+            // show the heading
+            MediumText(
+                text = stringResource(id = R.string.show_delete), fontWeight = FontWeight.Bold
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
 
         //show button horizontally
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -180,6 +197,7 @@ fun FilterView(
                     selectedOrderBy.value = OrderBy.Date
                     selectedSortBy.value = SortBy.Descending
                     selectedPriority.value = null
+                    showDelete.value = false
                     onApplyFilter()
                 })
             Spacer(modifier = Modifier.width(10.dp))
@@ -245,16 +263,19 @@ fun PriorityView(
                         index = index,
                         baseShape = RoundedCornerShape(30),
                         count = taskPriorityArrayLists.size,
-                    ), colors = SegmentedButtonDefaults.colors(
+                    ),
+                    colors = SegmentedButtonDefaults.colors(
                         activeContainerColor = Color.White,
                         inactiveContainerColor = Color.White,
-                    ), onClick = {
+                    ),
+                    onClick = {
                         // when user person the segment button, check if the selected value is not same then select the value
                         if (selectedPriority.value != priority) {
                             selectedPriority.value = priority
                             onSelect(selectedPriority.value)
                         }
-                    }, selected = selectedPriority.value == priority // show tick icon for the selected value
+                    },
+                    selected = selectedPriority.value == priority // show tick icon for the selected value
                 ) {
                     // title of the priority
                     MediumText(text = stringResource(id = priority.resId))
@@ -294,16 +315,19 @@ fun SortByView(defaultValue: SortBy, onSelect: (SortBy) -> Unit) {
                 shape = SegmentedButtonDefaults.itemShape(
                     index = index,
                     count = sortByList.size,
-                ), colors = SegmentedButtonDefaults.colors(
+                ),
+                colors = SegmentedButtonDefaults.colors(
                     activeContainerColor = Color.White,
                     inactiveContainerColor = Color.White,
-                ), onClick = {
+                ),
+                onClick = {
                     // when user person the segment button, check if the selected value is not same then select the value
                     if (selectedSortBy.value != sortBy) {
                         selectedSortBy.value = sortBy
                         onSelect(sortBy)
                     }
-                }, selected = selectedSortBy.value == sortBy // show tick icon for the selected value
+                },
+                selected = selectedSortBy.value == sortBy // show tick icon for the selected value
             ) {
                 // title of the sort by
                 MediumText(text = stringResource(id = sortBy.resId))
@@ -341,17 +365,20 @@ fun OrderByView(defaultValue: OrderBy?, onSelect: (OrderBy) -> Unit) {
                 shape = SegmentedButtonDefaults.itemShape(
                     index = index,
                     count = orderByList.size,
-                ), colors = SegmentedButtonDefaults.colors(
+                ),
+                colors = SegmentedButtonDefaults.colors(
                     activeContainerColor = Color.White,
                     inactiveContainerColor = Color.White,
-                ), onClick = {
+                ),
+                onClick = {
                     // when user person the segment button, check if the selected value is not same then select the value
                     if (selectedOrderBy.value != orderBy) {
                         selectedOrderBy.value = orderBy
                         onSelect(orderBy)
                     }
 
-                }, selected = selectedOrderBy.value == orderBy// show tick icon for the selected value
+                },
+                selected = selectedOrderBy.value == orderBy// show tick icon for the selected value
             ) {
                 // title of the OrderBy
                 MediumText(text = stringResource(id = orderBy.keyRes))
@@ -394,7 +421,7 @@ fun CategoriesFilterView(
     ) {
         items(categories.size) { index ->
             val category = categories[index]
-                //using the component to show the  category view.
+            //using the component to show the  category view.
             CategoryView(
                 text = category,
                 isClickable = !readOnly,

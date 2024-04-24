@@ -5,10 +5,16 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -16,6 +22,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,14 +59,26 @@ fun TodoListScreen(
 
     //using focus manager here to clear focus
     val focusManager = LocalFocusManager.current
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(state.taskFilters, appSettings.recordCount) {
+        listState.animateScrollToItem(0, 0)
+    }
+
 
     //Scaffold implements the basic material design visual layout structure.
     //This component provides API to put together several material components to construct your screen
     Scaffold(
-        modifier = Modifier.pointerInput(key1 = true) {
-            // when user presses our side of the ui then close the keyboard
-            detectTapGestures(onTap = { focusManager.clearFocus() })
-        },
+        modifier = Modifier
+            .pointerInput(key1 = true) {
+                // when user presses our side of the ui then close the keyboard
+                detectTapGestures(onTap = { focusManager.clearFocus() })
+            }
+            .windowInsetsPadding(
+                WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Horizontal
+                )
+            ),
         topBar = {
             // add app header as Screen Header, showing settings icon
             AppHeader(
@@ -126,7 +145,8 @@ fun TodoListScreen(
                             LazyColumn(
                                 modifier = Modifier.padding(top = 10.dp),
                                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                state = listState
                             ) {
                                 items(appSettings.tasks, key = { it.id }) { item ->
 //                                    adding a task-listItem with tasks as parameter
@@ -175,7 +195,7 @@ fun TodoListScreen(
                                         id = R.string.no_record_found_nessage,
                                         state.searchText
                                     ),
-                                    align= TextAlign.Center
+                                    align = TextAlign.Center
                                 )
                             }
                         }

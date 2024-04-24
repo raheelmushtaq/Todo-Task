@@ -1,5 +1,6 @@
 package com.app.todolist.presentation.screens.task_list.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +55,10 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
         // in this init of viewmodel  added a flow listener on the datastore, update the _appsettings value
         viewModelScope.launch {
             dataStoreHandler.getAppSettings().onEach {
+                Log.d(
+                    "xxxxxx",
+                    "dataStoreHandler.getAppSettings: new Value received\n${it.toString()} "
+                )
                 _appSettings.value = it
                 _dataStoreLiveState.value = it
                 // fetch task on teh basis of previous search
@@ -66,17 +71,16 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
     * fetching the task based on the search or filter*/
     private fun getTasks(searchText: String = "", taskFilters: TaskFilters = TaskFilters()) {
         viewModelScope.launch {
-            var tasks =
-                if (searchText.isEmpty()) {
+            var tasks = if (searchText.isEmpty()) {
 //            if search is empty the use all the tasks for applying filter
-                    _appSettings.value.tasks.toList()
-                } else {
-                    // if search is not empty then check check title or description contains the searched text
-                    _appSettings.value.tasks.toList().filter { task ->
-                        task.title.lowercase().contains(searchText) || task.description.lowercase()
-                            .contains(searchText)
-                    }
+                _appSettings.value.tasks.toList()
+            } else {
+                // if search is not empty then check check title or description contains the searched text
+                _appSettings.value.tasks.toList().filter { task ->
+                    task.title.lowercase().contains(searchText) || task.description.lowercase()
+                        .contains(searchText)
                 }
+            }
             // now here check if the taskPriority has been selected
             if (taskFilters.taskPriority != null) {
                 // if priority is selected, then filter out all only the selected tasks based on priority
@@ -86,13 +90,17 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                     )
                 }
             }
+
             // now here check if the category has been selected
             if (taskFilters.category != null) {
                 // if category is selected, then filter out all only the selected tasks based on category
                 tasks = tasks.filter { task -> task.category.equals(taskFilters.category, true) }
             }
 
-
+//
+//            if (taskFilters.orderBy == OrderBy.Completed) {
+//                tasks = tasks.filter { task -> task.isCompleted }
+//            } else {
 //            apply sorting based on sort by
             tasks = when (taskFilters.sortBy) {
                 is SortBy.Ascending -> {
@@ -112,16 +120,14 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                     }
                 }
             }
+            tasks = tasks.filter { tas -> tas.isDeleted == taskFilters.showDeleted }
+//            }
             // set state the of the filter applies
-            _dataState.value =
-                dataState.value.copy(
-                    searchText = searchText,
-                    taskFilters = taskFilters,
-                    showFilterDialog = false
-                )
+            _dataState.value = dataState.value.copy(
+                searchText = searchText, taskFilters = taskFilters, showFilterDialog = false
+            )
             // set filter tasks for the Ui to display
-            _dataStoreLiveState.value =
-                _appSettings.value.copy(tasks = tasks.toPersistentList())
+            _dataStoreLiveState.value = _appSettings.value.copy(tasks = tasks.toPersistentList())
         }
     }
 
@@ -156,7 +162,8 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
             // whe delete button is pressed, then delete the tasks from datastore
             is TaskListActionEvents.Delete -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    dataStoreHandler.deleteTasks(event.task)
+                    val task = event.task.copy(isDeleted = true)
+                    dataStoreHandler.updateTask(task)
                 }
             }
 

@@ -12,4 +12,5 @@ data class Tasks(
     val date: String = "",
     val priority: String = "",
     val isCompleted: Boolean = false,
+    val isDeleted: Boolean = false
 )
