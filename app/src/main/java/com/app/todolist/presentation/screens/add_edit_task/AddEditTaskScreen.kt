@@ -23,6 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,7 +53,11 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarTimeline
+import com.maxkeppeler.sheets.clock.ClockDialog
+import com.maxkeppeler.sheets.clock.models.ClockConfig
+import com.maxkeppeler.sheets.clock.models.ClockSelection
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,6 +106,7 @@ fun AddEditTodoScreen(
 
     // this is used from teh library maxkeppeler where it is used to remember the current state of hte Calender
     val calendarState = rememberSheetState()
+    val clockState = rememberSheetState()
     //created a calender Dialog for user with default settings
     CalendarDialog(state = calendarState, config = CalendarConfig(
         monthSelection = true,
@@ -115,6 +122,17 @@ fun AddEditTodoScreen(
         )
     })
 
+    val selectedTime = remember { mutableStateOf(LocalTime.of(8, 20, 0)) }
+    ClockDialog(
+        state = clockState,
+        selection = ClockSelection.HoursMinutes { hours, minutes ->
+            selectedTime.value = LocalTime.of(hours, minutes, 0)
+        },
+        config = ClockConfig(
+            defaultTime = selectedTime.value,
+            is24HourFormat = true
+        ),
+    )
     // focus manager is used remove the focus from any text field
     val focusManager = LocalFocusManager.current
     //Scaffold implements the basic material design visual layout structure.
