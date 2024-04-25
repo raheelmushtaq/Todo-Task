@@ -60,7 +60,6 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
                     "dataStoreHandler.getAppSettings: new Value received\n${it.toString()} "
                 )
                 _appSettings.value = it
-                _dataStoreLiveState.value = it
                 // fetch task on teh basis of previous search
                 getTasks(dataState.value.searchText, dataState.value.taskFilters)
             }.launchIn(viewModelScope)
