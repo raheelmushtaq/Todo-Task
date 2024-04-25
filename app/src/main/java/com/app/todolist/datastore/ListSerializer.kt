@@ -17,7 +17,6 @@ import kotlinx.serialization.encoding.Encoder
 * In this file, there are 2 classes 1 for creating Task persistent List and Other is for String Persistent List which is used for saving categories
 * */
 @OptIn(ExperimentalSerializationApi::class)
-@Serializer(forClass = PersistentList::class)
 class SerializerPersistentTask(
     private val serializer: KSerializer<Tasks>,
 ) : KSerializer<PersistentList<Tasks>> {
@@ -40,7 +39,6 @@ class SerializerPersistentTask(
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-@Serializer(forClass = PersistentList::class)
 class SerializerPersistentString(
     private val serializer: KSerializer<String>,
 ) : KSerializer<PersistentList<String>> {
