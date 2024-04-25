@@ -46,7 +46,7 @@ class TaskListViewModelTest {
     fun getTasksWithEmptySearchAndNoFilter() = runBlocking {
         viewModel.onEvent(TaskListActionEvents.Search(""))
         delay(2000)
-        val setting: AppSettings = viewModel.dataStoreLiveState.value
+        val setting = viewModel.dataState.value
 
         Truth.assertThat(setting.tasks).isNotEmpty()
     }
@@ -55,7 +55,7 @@ class TaskListViewModelTest {
     fun getTasksWithSearchAndNoFilter() = runBlocking {
         viewModel.onEvent(TaskListActionEvents.Search("7"))
         delay(2000)
-        val setting: AppSettings = viewModel.dataStoreLiveState.value
+        val setting = viewModel.dataState.value
 
         Truth.assertThat(setting.tasks.size).isEqualTo(1)
     }
@@ -64,7 +64,7 @@ class TaskListViewModelTest {
     fun getTasksWithEmptySearchAndPriorityHighFilter() = runBlocking {
         viewModel.onEvent(TaskListActionEvents.ApplyFilter(TaskFilters(taskPriority = TaskPriority.High)))
         delay(2000)
-        val setting: AppSettings = viewModel.dataStoreLiveState.value
+        val setting = viewModel.dataState.value
 
         Truth.assertThat(setting.tasks.find { item -> item.priority == TaskPriority.Low.value })
             .isEqualTo(null)
@@ -76,7 +76,7 @@ class TaskListViewModelTest {
     fun getTasksWithEmptySearchAndWithCategory() = runBlocking {
         viewModel.onEvent(TaskListActionEvents.ApplyFilter(TaskFilters(category = "Other")))
         delay(2000)
-        val setting: AppSettings = viewModel.dataStoreLiveState.value
+        val setting = viewModel.dataState.value
 
         Truth.assertThat(setting.tasks.find { item -> item.category == "asdf" }).isEqualTo(null)
 
@@ -86,12 +86,12 @@ class TaskListViewModelTest {
     @Test
     fun deleteTest() = runBlocking {
         delay(2000)
-        var setting: AppSettings = viewModel.dataStoreLiveState.value
+        var setting = viewModel.dataState.value
 
         val beforeDeleting = setting.tasks.find { item -> item.id == 3 }
         viewModel.onEvent(TaskListActionEvents.Delete(task = Tasks(id = 3)))
         delay(2000)
-        setting = viewModel.dataStoreLiveState.value
+        setting = viewModel.dataState.value
 
         val afterDeleting = setting.tasks.find { item -> item.id == 3 }
 
@@ -102,12 +102,12 @@ class TaskListViewModelTest {
     @Test
     fun markAsCompleteTest() = runBlocking {
         delay(2000)
-        var setting: AppSettings = viewModel.dataStoreLiveState.value
+        var setting = viewModel.dataState.value
 
         val beforeDeleting = setting.tasks.find { item -> item.id == 2 }
         viewModel.onEvent(TaskListActionEvents.MarkAsComplete(task = Tasks(id = 2)))
         delay(2000)
-        setting = viewModel.dataStoreLiveState.value
+        setting = viewModel.dataState.value
 
         val afterDeleting = setting.tasks.find { item -> item.id == 2 }
 

@@ -12,5 +12,5 @@ data class AddEditDataState(
     val taskPriority: TaskPriority? = null,
     val category: String? = null,
     val date: String = "",
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
 )

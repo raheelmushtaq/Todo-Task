@@ -1,7 +1,6 @@
 package com.app.todolist.presentation.screens.task_list.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -16,13 +15,10 @@ import com.app.todolist.presentation.utils.filters.TaskFilters
 import com.app.todolist.utils.DebounceSearchUtils
 import com.app.todolist.utils.getDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 
 /*
@@ -45,11 +41,6 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
     //this is State variable of the _dataState, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
     val dataState: State<TaskListDataState> = _dataState
     //create a mutable state for listening to the datastore from the datastore. when datastore is updated or at first launch of viewmodel, this value is updated
-
-    private val _dataStoreLiveState = mutableStateOf(AppSettings())
-
-    //this is State variable of the _appsettings, it is not mutable, so in AddEditScreen it is used to listen for update and recompose the ui on this state change
-    val dataStoreLiveState: MutableState<AppSettings> = _dataStoreLiveState
 
     init {
         // in this init of viewmodel  added a flow listener on the datastore, update the _appsettings value
@@ -123,10 +114,11 @@ class TaskListViewModel @Inject constructor(private val dataStoreHandler: DataSt
 //            }
             // set state the of the filter applies
             _dataState.value = dataState.value.copy(
-                searchText = searchText, taskFilters = taskFilters, showFilterDialog = false
+                searchText = searchText, taskFilters = taskFilters, showFilterDialog = false,
+                categories = _appSettings.value.categories.toList(),
+                tasks = tasks.toList()
             )
-            // set filter tasks for the Ui to display
-            _dataStoreLiveState.value = _appSettings.value.copy(tasks = tasks.toPersistentList())
+
         }
     }
 

@@ -55,13 +55,12 @@ fun TodoListScreen(
     // fetching the current value of the data state. when the datastate is update
     val state = viewModel.dataState.value
     //fetching the current value of the app datastore. when the task is filtered, or deleted or mark as completed the for
-    val appSettings = viewModel.dataStoreLiveState.value
 
     //using focus manager here to clear focus
     val focusManager = LocalFocusManager.current
     val listState = rememberLazyListState()
 
-    LaunchedEffect(state.taskFilters, appSettings.recordCount) {
+    LaunchedEffect(state) {
         listState.animateScrollToItem(0, 0)
     }
 
@@ -140,7 +139,7 @@ fun TodoListScreen(
                             }
                         )
                         // checking if the tasks size if not equal to 0 the showing list of columns
-                        if (appSettings.tasks.size != 0) {
+                        if (state.tasks.size != 0) {
                             // showing lazy column
                             LazyColumn(
                                 modifier = Modifier.padding(top = 10.dp),
@@ -148,7 +147,7 @@ fun TodoListScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 state = listState
                             ) {
-                                items(appSettings.tasks, key = { it.id }) { item ->
+                                items(state.tasks, key = { it.id }) { item ->
 //                                    adding a task-listItem with tasks as parameter
                                     TaskItemCard(
                                         item = item,
@@ -213,7 +212,7 @@ fun TodoListScreen(
                                     // when dialog auto dismisses on drag on tap Outside then  this event to the viewmodel
                                     viewModel.onEvent(TaskListActionEvents.HideFilter)
                                 },
-                                categories = appSettings.categories
+                                categories = state.categories
                             )
                         }
                     }

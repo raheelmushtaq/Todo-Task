@@ -9,7 +9,7 @@ data class Tasks(
     val title: String = "",
     val description: String = "",
     val category: String = "",
-    val date: String = "",
+    val date: String = "24-04-2024",
     val priority: String = "",
     val isCompleted: Boolean = false,
     val isDeleted: Boolean = false

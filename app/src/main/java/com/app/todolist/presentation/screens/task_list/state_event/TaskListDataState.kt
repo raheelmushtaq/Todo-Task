@@ -1,7 +1,7 @@
 package com.app.todolist.presentation.screens.task_list.state_event
 
+import com.app.todolist.presentation.models.Tasks
 import com.app.todolist.presentation.utils.filters.TaskFilters
-
 
 
 /*
@@ -13,4 +13,6 @@ data class TaskListDataState(
     val isLoading: Boolean = false,
     val showFilterDialog: Boolean = false,
     val taskFilters: TaskFilters = TaskFilters(),
+    val tasks: List<Tasks> = arrayListOf(),
+    val categories: List<String> = arrayListOf()
 )
